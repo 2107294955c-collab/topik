@@ -10,12 +10,13 @@
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260630-3">
-  <script defer src="assets/js/vocab-batch1.js?v=20260630-3"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260630-3"></script>
-  <script defer src="assets/js/data.js?v=20260630-3"></script>
-  <script defer src="assets/js/storage.js?v=20260630-3"></script>
-  <script defer src="assets/js/app.js?v=20260630-3"></script>
+  <link rel="stylesheet" href="assets/css/app.css?v=20260630-4">
+  <script defer src="assets/js/vocab-batch1.js?v=20260630-4"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260630-4"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260630-4"></script>
+  <script defer src="assets/js/data.js?v=20260630-4"></script>
+  <script defer src="assets/js/storage.js?v=20260630-4"></script>
+  <script defer src="assets/js/app.js?v=20260630-4"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -80,7 +81,7 @@
 
       <section id="grammar" class="page" aria-labelledby="grammarTitle">
         <header class="page-header"><div><span class="eyebrow">GRAMMAR</span><h1 id="grammarTitle">语法笔记</h1><p id="grammarSummary">整理 TOPIK 中高级表达。</p></div><button class="icon-button" id="addGrammarButton" aria-label="添加语法">＋</button></header>
-        <div class="toolbar"><label class="search-field"><span>⌕</span><input id="grammarSearch" placeholder="搜索语法、中文解释或例句"></label><select id="grammarFilter" aria-label="筛选语法"><option value="all">全部语法</option><option value="learning">待复习</option><option value="reviewed">已复习</option></select></div>
+        <div class="toolbar"><label class="search-field"><span>⌕</span><input id="grammarSearch" placeholder="搜索语法、中文解释或例句"></label><select id="grammarLevelFilter" aria-label="按等级筛选语法"><option value="all">全部等级</option><option value="中级">中级</option><option value="高级">高级</option><option value="中高级">核心</option><option value="自定义">自定义</option></select><select id="grammarFilter" aria-label="按复习状态筛选语法"><option value="all">全部状态</option><option value="learning">待复习</option><option value="reviewed">已复习</option></select></div>
         <div id="grammarList" class="content-grid"></div>
       </section>
 

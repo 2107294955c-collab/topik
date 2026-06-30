@@ -1,5 +1,5 @@
-const CACHE='topik-study-shell-v1';
-const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg','./assets/css/app.css?v=20260630-3','./assets/js/vocab-batch1.js?v=20260630-3','./assets/js/vocab-4000.js?v=20260630-3','./assets/js/data.js?v=20260630-3','./assets/js/storage.js?v=20260630-3','./assets/js/app.js?v=20260630-3'];
+const CACHE='topik-study-shell-v2';
+const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg','./assets/css/app.css?v=20260630-4','./assets/js/vocab-batch1.js?v=20260630-4','./assets/js/vocab-4000.js?v=20260630-4','./assets/js/grammar-400.js?v=20260630-4','./assets/js/data.js?v=20260630-4','./assets/js/storage.js?v=20260630-4','./assets/js/app.js?v=20260630-4'];
 
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});

@@ -11,7 +11,7 @@
 - 单词元数据：韩语、中文、词性、双语例句、TOPIK 等级、分类和复习状态
 - Again / Hard / Good / Easy 四档间隔复习、到期计划和记忆状态
 - 韩语拼写练习、字符错误提示、无限重试、双向选择题和错词本；每题只记录一次最终结果
-- 语法笔记、搜索和复习记录
+- 语法笔记、搜索、等级筛选和复习记录；现有 15 条核心笔记之外另内置 400 条中高级语法
 - 本地写作记录，以及 OpenAI 韩语写作批改、错误对照和中文解释
 - 34 份历届 TOPIK PDF，PDF 模式继续保留
 - 可手动维护或从 JSON 批量导入的阅读、听力、写作题库（当前练习引擎先开放阅读四选一）
@@ -48,6 +48,13 @@ korean,chinese,partOfSpeech,example,exampleZh,topikLevel,category,mastered,revie
 ```
 
 导入支持合并或替换。合并时，相同韩语、中文释义和词性的词条会保留已有掌握状态、间隔复习进度和错词记录。实际可保存容量取决于浏览器的 localStorage 配额。
+
+## 内置中高级语法库
+
+- 新增 400 条语法：中级 199 条、高级 201 条；加上原有核心笔记后共 415 条。
+- 每条包含语法形式、简洁中文说明、原创韩语例句、等级和功能分类。
+- 目录经过多来源交叉整理与写法去重，主要参考 [Tammy Korean TOPIK II 148](https://learning-korean.com/intermediate/20220702-12705/)、[TOPIK GUIDE 中级历届统计](https://www.topikguide.com/topik-intermediate-grammar-list/)、[TOPIK GUIDE 高级历届统计](https://www.topikguide.com/topik-advanced-grammar-frequency-list/) 和 [Korean Topik 150](https://www.koreantopik.com/2025/01/master-150-topik-2-grammar-rules-with.html)。中文说明和韩语例句均为本站重新编写。
+- 旧设备首次打开新版时会自动加入新增语法，同时保留原有语法、编辑内容、已复习状态、次数和日期。语法数据继续包含在完整 JSON 备份中。
 
 ## 导入题库
 
@@ -98,6 +105,7 @@ assets/
   js/data.js
   js/storage.js
   js/app.js
+  js/grammar-400.js
   js/vocab-batch1.js
   js/vocab-4000.js
   icon.svg

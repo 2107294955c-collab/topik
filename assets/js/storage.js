@@ -3,7 +3,7 @@
   const DRAFT_KEY='topik-study-writing-draft-v1';
   const APP='topik-study';
   const VERSION=6;
-  const CONTENT_VERSION=3;
+  const CONTENT_VERSION=4;
   const dataSource=()=>window.TopikData;
   const isObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
   const text=(value,max=20000)=>typeof value==='string'?value.trim().slice(0,max):'';
@@ -20,7 +20,7 @@
       const mastered=word.mastered===true,states=new Set(['new','learning','review','mastered']),results=new Set(['again','hard','good','easy']);
       return {id:text(word.id,100)||`word-${Date.now()}-${index}`,korean:text(word.korean||word.word,300),chinese:text(word.chinese||word.meaning||word.meaningCn,500),partOfSpeech:text(word.partOfSpeech||word.pos||word.partOfSpeechCn||word.partOfSpeechKo,100),example:text(word.example||word.exampleKo||word.exampleKr),exampleZh:text(word.exampleZh||word.exampleChinese||word.exampleCn),topikLevel:text(word.topikLevel||word.level||word.topikLevelCode,20),category:text(word.category,100),mastered,reviewCount:Math.max(0,Math.floor(Number(word.reviewCount)||0)),lastReviewedAt:isoOrNull(word.lastReviewedAt||word.lastReviewDate),nextReviewAt:isoOrNull(word.nextReviewAt||word.nextReviewDate),wrongCount:Math.max(0,Math.floor(Number(word.wrongCount)||0)),lastWrongAt:isoOrNull(word.lastWrongAt),learningState:states.has(word.learningState)?word.learningState:(mastered?'mastered':Number(word.reviewCount)>0?'review':'new'),successStreak:Math.max(0,Math.floor(Number(word.successStreak)||0)),easeFactor:Math.min(3,Math.max(1.3,Number(word.easeFactor)||2.5)),intervalDays:Math.min(3650,Math.max(0,Number(word.intervalDays)||0)),lastResult:results.has(word.lastResult)?word.lastResult:null,userEdited:word.userEdited===true};
     }).filter(word=>word.korean&&word.chinese):[];
-    const grammar=Array.isArray(data.grammar)?data.grammar.filter(isObject).map((point,index)=>({id:text(point.id,100)||`grammar-${Date.now()}-${index}`,pattern:text(point.pattern,500),explanation:text(point.explanation),examples:text(point.examples),reviewed:point.reviewed===true,reviewCount:Math.max(0,Math.floor(Number(point.reviewCount)||0)),lastReviewedAt:isoOrNull(point.lastReviewedAt)})).filter(point=>point.pattern&&point.explanation):[];
+    const grammar=Array.isArray(data.grammar)?data.grammar.filter(isObject).map((point,index)=>({id:text(point.id,100)||`grammar-${Date.now()}-${index}`,pattern:text(point.pattern,500),explanation:text(point.explanation),examples:text(point.examples),level:text(point.level,20),category:text(point.category,100),reviewed:point.reviewed===true,reviewCount:Math.max(0,Math.floor(Number(point.reviewCount)||0)),lastReviewedAt:isoOrNull(point.lastReviewedAt),userEdited:point.userEdited===true})).filter(point=>point.pattern&&point.explanation):[];
     const writings=Array.isArray(data.writings)?data.writings.filter(isObject).map((item,index)=>({id:text(item.id,100)||`writing-${Date.now()}-${index}`,text:text(item.text),feedback:text(item.feedback,50000),date:isoOrNull(item.date||item.createdAt)||new Date().toISOString()})).filter(item=>item.text):[];
     const daily={};if(isObject(data.daily))Object.entries(data.daily).forEach(([date,values])=>{if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(date)&&Array.isArray(values))daily[date]=[...new Set(values.filter(x=>typeof x==='string').map(x=>x.slice(0,100)))];});
     const quizHistory=Array.isArray(data.quizHistory)?data.quizHistory.filter(isObject).map((item,index)=>({id:text(item.id,100)||`quiz-${Date.now()}-${index}`,direction:item.direction==='zh-ko'?'zh-ko':'ko-zh',correct:Math.max(0,Math.floor(Number(item.correct)||0)),total:Math.max(1,Math.floor(Number(item.total)||10)),date:isoOrNull(item.date)||new Date().toISOString()})):[];
@@ -44,6 +44,9 @@
     const progressFields=['mastered','reviewCount','lastReviewedAt','nextReviewAt','wrongCount','lastWrongAt','learningState','successStreak','easeFactor','intervalDays','lastResult','userEdited'];
     const wordIds=new Map(data.words.map(item=>[item.id,item])),wordKeys=new Set(data.words.map(wordKey));
     dataSource().words.filter(item=>item.id.startsWith('topik_4000_')||(previousContentVersion<2&&item.id.startsWith('topik_pdf_'))).forEach(item=>{const existing=wordIds.get(item.id),key=wordKey(item);if(existing){if(!existing.userEdited){const progress=Object.fromEntries(progressFields.map(field=>[field,existing[field]]));Object.assign(existing,item,progress)}return}if(!wordKeys.has(key)){const next=normalize({words:[item]}).words[0];if(next){data.words.push(next);wordIds.set(next.id,next);wordKeys.add(key)}}});
+    const grammarKey=item=>item.pattern.replace(/\s+/g,'').toLocaleLowerCase(),grammarProgress=['reviewed','reviewCount','lastReviewedAt','userEdited'];
+    const grammarIds=new Map(data.grammar.map(item=>[item.id,item])),grammarKeys=new Set(data.grammar.map(grammarKey));
+    dataSource().grammar.filter(item=>item.id.startsWith('topik_grammar_')).forEach(item=>{const existing=grammarIds.get(item.id),key=grammarKey(item);if(existing){if(!existing.userEdited){const progress=Object.fromEntries(grammarProgress.map(field=>[field,existing[field]]));Object.assign(existing,item,progress)}return}if(!grammarKeys.has(key)){const next=normalize({grammar:[item]}).grammar[0];if(next){data.grammar.push(next);grammarIds.set(next.id,next);grammarKeys.add(key)}}});
     data.contentVersion=CONTENT_VERSION;
     return {data,changed:true};
   }
