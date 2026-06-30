@@ -2,7 +2,7 @@
   const KEY='topik-study-local-v1';
   const APP='topik-study';
   const VERSION=5;
-  const CONTENT_VERSION=2;
+  const CONTENT_VERSION=3;
   const dataSource=()=>window.TopikData;
   const isObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
   const text=(value,max=20000)=>typeof value==='string'?value.trim().slice(0,max):'';
@@ -15,7 +15,7 @@
 
   function normalize(source){
     const data=isObject(source)?source:{};
-    const words=Array.isArray(data.words)?data.words.filter(isObject).map((word,index)=>({id:text(word.id,100)||`word-${Date.now()}-${index}`,korean:text(word.korean||word.word,300),chinese:text(word.chinese||word.meaning,500),partOfSpeech:text(word.partOfSpeech||word.pos,100),example:text(word.example||word.exampleKo),exampleZh:text(word.exampleZh||word.exampleChinese),topikLevel:text(word.topikLevel||word.level,20),category:text(word.category,100),mastered:word.mastered===true,reviewCount:Math.max(0,Math.floor(Number(word.reviewCount)||0)),lastReviewedAt:isoOrNull(word.lastReviewedAt||word.lastReviewDate),nextReviewAt:isoOrNull(word.nextReviewAt),wrongCount:Math.max(0,Math.floor(Number(word.wrongCount)||0)),lastWrongAt:isoOrNull(word.lastWrongAt)})).filter(word=>word.korean&&word.chinese):[];
+    const words=Array.isArray(data.words)?data.words.filter(isObject).map((word,index)=>({id:text(word.id,100)||`word-${Date.now()}-${index}`,korean:text(word.korean||word.word,300),chinese:text(word.chinese||word.meaning||word.meaningCn,500),partOfSpeech:text(word.partOfSpeech||word.pos||word.partOfSpeechCn||word.partOfSpeechKo,100),example:text(word.example||word.exampleKo||word.exampleKr),exampleZh:text(word.exampleZh||word.exampleChinese||word.exampleCn),topikLevel:text(word.topikLevel||word.level||word.topikLevelCode,20),category:text(word.category,100),mastered:word.mastered===true,reviewCount:Math.max(0,Math.floor(Number(word.reviewCount)||0)),lastReviewedAt:isoOrNull(word.lastReviewedAt||word.lastReviewDate),nextReviewAt:isoOrNull(word.nextReviewAt||word.nextReviewDate),wrongCount:Math.max(0,Math.floor(Number(word.wrongCount)||0)),lastWrongAt:isoOrNull(word.lastWrongAt)})).filter(word=>word.korean&&word.chinese):[];
     const grammar=Array.isArray(data.grammar)?data.grammar.filter(isObject).map((point,index)=>({id:text(point.id,100)||`grammar-${Date.now()}-${index}`,pattern:text(point.pattern,500),explanation:text(point.explanation),examples:text(point.examples),reviewed:point.reviewed===true,reviewCount:Math.max(0,Math.floor(Number(point.reviewCount)||0)),lastReviewedAt:isoOrNull(point.lastReviewedAt)})).filter(point=>point.pattern&&point.explanation):[];
     const writings=Array.isArray(data.writings)?data.writings.filter(isObject).map((item,index)=>({id:text(item.id,100)||`writing-${Date.now()}-${index}`,text:text(item.text),feedback:text(item.feedback,50000),date:isoOrNull(item.date||item.createdAt)||new Date().toISOString()})).filter(item=>item.text):[];
     const daily={};if(isObject(data.daily))Object.entries(data.daily).forEach(([date,values])=>{if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(date)&&Array.isArray(values))daily[date]=[...new Set(values.filter(x=>typeof x==='string').map(x=>x.slice(0,100)))];});
@@ -36,8 +36,9 @@
   function withLatestContent(source){
     const data=normalize(source);
     if(data.contentVersion>=CONTENT_VERSION)return {data,changed:false};
-    const wordIds=new Set(data.words.map(item=>item.id)),wordKeys=new Set(data.words.map(item=>`${item.korean.toLocaleLowerCase()}\u0000${item.chinese.toLocaleLowerCase()}`));
-    dataSource().words.filter(item=>item.id.startsWith('topik_pdf_')).forEach(item=>{const key=`${item.korean.toLocaleLowerCase()}\u0000${item.chinese.toLocaleLowerCase()}`;if(!wordIds.has(item.id)&&!wordKeys.has(key)){data.words.push({...item});wordIds.add(item.id);wordKeys.add(key)}});
+    const previousContentVersion=data.contentVersion,wordKey=item=>`${item.korean.toLocaleLowerCase()}\u0000${item.chinese.toLocaleLowerCase()}\u0000${item.partOfSpeech.toLocaleLowerCase()}`;
+    const wordIds=new Set(data.words.map(item=>item.id)),wordKeys=new Set(data.words.map(wordKey));
+    dataSource().words.filter(item=>item.id.startsWith('topik_4000_')||(previousContentVersion<2&&item.id.startsWith('topik_pdf_'))).forEach(item=>{const key=wordKey(item);if(!wordIds.has(item.id)&&!wordKeys.has(key)){data.words.push({...item});wordIds.add(item.id);wordKeys.add(key)}});
     data.contentVersion=CONTENT_VERSION;
     return {data,changed:true};
   }
