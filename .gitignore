@@ -1,0 +1,16 @@
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+coverage/
+android/.gradle/
+android/local.properties
+ios/Pods/
+ios/.symlinks/
+*.iml
+.idea/
+.vscode/
+
+# Local packaging output; the live site is published from the repository root.
+output/

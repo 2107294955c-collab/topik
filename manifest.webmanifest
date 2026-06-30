@@ -1,0 +1,13 @@
+{
+  "name": "TOPIK Study Companion",
+  "short_name": "TOPIK Study",
+  "description": "本地优先的个人 TOPIK 5–6 级学习工具",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f6fb",
+  "theme_color": "#4f63b8",
+  "icons": [
+    {"src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
