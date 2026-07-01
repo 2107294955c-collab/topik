@@ -18,7 +18,7 @@ const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
 assert.equal(Store.VERSION, 7);
-assert.equal(Store.CONTENT_VERSION, 5);
+assert.equal(Store.CONTENT_VERSION, 6);
 assert.deepEqual(fresh.studyProfile, {
   targetLevel: '6', examDate: '', dailyWordTarget: 10,
   dailyGrammarTarget: 2, dailyQuestionTarget: 10,
@@ -29,22 +29,25 @@ assert.equal(fresh.grammar.length, 415);
 assert.equal(new Set(window.TopikGrammar400.map(point => point.pattern)).size, 400);
 assert.ok(fresh.words.every(word => word.learningState && word.easeFactor >= 1.3));
 
-assert.equal(window.TopikReadingBank.length, 150);
-assert.equal(fresh.questionBank.length, 156);
-assert.equal(new Set(window.TopikReadingBank.map(question => question.id)).size, 150);
+assert.equal(window.TopikReadingBank.length, 600);
+assert.equal(fresh.questionBank.length, 606);
+assert.equal(window.TopikData.papers.length, 40);
+assert.equal(new Set(window.TopikReadingBank.map(question => question.id)).size, 600);
 assert.ok(window.TopikReadingBank.every(question =>
   question.section === 'reading' &&
   question.questionNumber >= 1 && question.questionNumber <= 50 &&
   question.options.length === 4 &&
   ['A', 'B', 'C', 'D'].includes(question.correctAnswer)
 ));
-for (const exam of ['83', '91', '96']) {
+for (const exam of ['35', '36', '37', '41', '47', '52', '60', '64', '83', '91', '96', '102']) {
   assert.equal(window.TopikReadingBank.filter(question => question.examNumber === exam).length, 50);
 }
-assert.equal(window.TopikReadingBank.filter(question => question.sourceStatus === 'official').length, 148);
-assert.equal(window.TopikReadingBank.filter(question => question.sourceStatus === 'reconstructed').length, 2);
-assert.equal(window.TopikReadingBank.filter(question => question.image).length, 18);
+assert.equal(window.TopikReadingBank.filter(question => question.sourceStatus === 'official').length, 594);
+assert.equal(window.TopikReadingBank.filter(question => question.sourceStatus === 'reconstructed').length, 6);
+assert.equal(window.TopikReadingBank.filter(question => question.image).length, 72);
 assert.equal(window.TopikReadingBank.find(question => question.id === 'topik_83_reading_30').correctAnswer, 'C');
+assert.equal(window.TopikReadingBank.find(question => question.id === 'topik_47_reading_01').correctAnswer, 'C');
+assert.equal(window.TopikReadingBank.find(question => question.id === 'topik_102_reading_50').correctAnswer, 'C');
 
 // Preserve learning progress and custom content while bundled content is upgraded.
 const learned = fresh.words[0];
@@ -58,7 +61,7 @@ reviewedGrammar.lastReviewedAt = '2026-06-29T12:00:00.000Z';
 const duplicatePattern = fresh.grammar.find(point => point.id === 'topik_grammar_0002');
 fresh.grammar = fresh.grammar.filter(point => !point.id.startsWith('topik_grammar_') || point.id === reviewedGrammar.id);
 fresh.grammar.push({...duplicatePattern, id: 'custom-grammar-same-pattern', category: 'custom', userEdited: true});
-fresh.questionBank = fresh.questionBank.filter(question => !question.id.startsWith('topik_'));
+fresh.questionBank = fresh.questionBank.filter(question => !question.id.startsWith('topik_') || ['83', '91', '96'].includes(question.examNumber));
 fresh.studyProfile = {targetLevel: '5', examDate: '2026-10-18', dailyWordTarget: 15, dailyGrammarTarget: 3, dailyQuestionTarget: 12};
 fresh.contentVersion = 3;
 values.set(Store.KEY, JSON.stringify(fresh));
@@ -72,8 +75,8 @@ assert.equal(migrated.writingDraft, 'saved draft');
 assert.equal(migrated.grammar.length, 415);
 assert.equal(migrated.grammar.find(point => point.id === 'topik_grammar_0001').reviewCount, 7);
 assert.equal(migrated.grammar.filter(point => point.pattern === duplicatePattern.pattern).length, 1);
-assert.equal(migrated.questionBank.length, 156);
-assert.equal(migrated.contentVersion, 5);
+assert.equal(migrated.questionBank.length, 606);
+assert.equal(migrated.contentVersion, 6);
 assert.deepEqual(migrated.studyProfile, fresh.studyProfile);
 
 const normalizedSession = Store.normalize({
@@ -105,7 +108,7 @@ assert.equal(values.get(Store.DRAFT_KEY), 'new draft');
 
 const oldBackup = Store.parseBackup({app: Store.APP, schemaVersion: 5, data: migrated});
 assert.equal(oldBackup.words.length, 4069);
-assert.equal(oldBackup.questionBank.length, 156);
+assert.equal(oldBackup.questionBank.length, 606);
 const oldDataWithoutProfile = {...migrated};
 delete oldDataWithoutProfile.studyProfile;
 assert.deepEqual(Store.merge(migrated, oldDataWithoutProfile).studyProfile, migrated.studyProfile);

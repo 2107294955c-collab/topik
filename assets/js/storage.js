@@ -3,7 +3,7 @@
   const DRAFT_KEY='topik-study-writing-draft-v1';
   const APP='topik-study';
   const VERSION=7;
-  const CONTENT_VERSION=5;
+  const CONTENT_VERSION=6;
   const dataSource=()=>window.TopikData;
   const isObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
   const text=(value,max=20000)=>typeof value==='string'?value.trim().slice(0,max):'';

@@ -3,10 +3,18 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const root = path.resolve(__dirname, '..');
-const exams = ['83', '91', '96'];
+// Complete TOPIK II PBT reading sets currently released for public practice.
+// NIIED does not publish every administered round; these are the released sets,
+// not a claim that no other TOPIK examinations were held.
+const exams = ['35', '36', '37', '41', '47', '52', '60', '64', '83', '91', '96', '102'];
 // Verified against the official answer sheets stored in resources/past-papers.
 // The third-party 83rd mock page currently marks Q30 as ②, while the official key is ③.
 const officialAnswerOverrides = {'83': {30: 3}};
+// Transcribed from the visually verified official answer PDFs stored locally.
+const verifiedAnswerKeys = {
+  '47': '34131242234112323424124341431214431432332121332441',
+  '102': '11441321242112123114331422343241343344324232132443',
+};
 
 async function fetchContent(url, binary = false) {
   const response = await fetch(url, {headers: {'user-agent': 'TOPIK Study personal learning tool'}});
@@ -85,6 +93,10 @@ async function main() {
     const sourceUrl = `https://www.topikguide.com/mock-tests/${exam}-TOPIK-II-Reading-Mock-Test.html`;
     const {questions, answers} = parsePage(await fetchContent(sourceUrl), exam);
     if (questions.length !== 50 || Object.keys(answers).length !== 50) throw new Error(`${exam}: expected 50 questions and answers`);
+    if (verifiedAnswerKeys[exam]) {
+      const sourceKey = questions.map(question => officialAnswerOverrides[exam]?.[question.num] || Number(answers[question.num])).join('');
+      if (sourceKey !== verifiedAnswerKeys[exam]) throw new Error(`${exam}: source answers differ from the verified official PDF`);
+    }
     const imageDirectory = path.join(root, 'assets', 'questions', exam);
     fs.mkdirSync(imageDirectory, {recursive: true});
     let sharedPassage = '';
@@ -141,7 +153,8 @@ async function main() {
   }
 
   const ids = new Set(bank.map(question => question.id));
-  if (bank.length !== 150 || ids.size !== 150) throw new Error('Expected 150 unique reading questions');
+  const expected = exams.length * 50;
+  if (bank.length !== expected || ids.size !== expected) throw new Error(`Expected ${expected} unique reading questions`);
   const output = `(function(){\n  window.TopikReadingBank=${JSON.stringify(bank, null, 2)};\n})();\n`;
   fs.writeFileSync(path.join(root, 'assets', 'js', 'topik-reading-bank.js'), output, 'utf8');
   console.log(`Generated ${bank.length} questions (${bank.filter(question => question.sourceStatus === 'reconstructed').length} reconstructed) and downloaded ${bank.filter(question => question.image).length} images.`);
