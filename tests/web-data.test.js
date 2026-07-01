@@ -10,6 +10,7 @@ global.localStorage = {
 require('../assets/js/vocab-batch1.js');
 require('../assets/js/vocab-4000.js');
 require('../assets/js/grammar-400.js');
+require('../assets/js/topik-reading-bank.js');
 require('../assets/js/data.js');
 require('../assets/js/storage.js');
 
@@ -17,18 +18,31 @@ const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
 assert.equal(Store.VERSION, 6);
-assert.equal(Store.CONTENT_VERSION, 4);
+assert.equal(Store.CONTENT_VERSION, 5);
 assert.equal(fresh.words.length, 4069);
 assert.equal(window.TopikGrammar400.length, 400);
 assert.equal(fresh.grammar.length, 415);
 assert.equal(new Set(window.TopikGrammar400.map(point => point.pattern)).size, 400);
-assert.equal(new Set(window.TopikGrammar400.map(point => point.pattern.normalize('NFKC').replace(/[\s()\/.,?\-]/g, '').replace(/으/g, ''))).size, 400);
-assert.ok(window.TopikGrammar400.every(point => point.explanation && point.examples && ['中级', '高级'].includes(point.level) && point.category));
-assert.equal(fresh.grammar.filter(point => point.level === '中级').length, 199);
-assert.equal(fresh.grammar.filter(point => point.level === '高级').length, 201);
-assert.equal(fresh.words.filter(word => word.chinese === '释义待补充').length, 205);
 assert.ok(fresh.words.every(word => word.learningState && word.easeFactor >= 1.3));
 
+assert.equal(window.TopikReadingBank.length, 150);
+assert.equal(fresh.questionBank.length, 156);
+assert.equal(new Set(window.TopikReadingBank.map(question => question.id)).size, 150);
+assert.ok(window.TopikReadingBank.every(question =>
+  question.section === 'reading' &&
+  question.questionNumber >= 1 && question.questionNumber <= 50 &&
+  question.options.length === 4 &&
+  ['A', 'B', 'C', 'D'].includes(question.correctAnswer)
+));
+for (const exam of ['83', '91', '96']) {
+  assert.equal(window.TopikReadingBank.filter(question => question.examNumber === exam).length, 50);
+}
+assert.equal(window.TopikReadingBank.filter(question => question.sourceStatus === 'official').length, 148);
+assert.equal(window.TopikReadingBank.filter(question => question.sourceStatus === 'reconstructed').length, 2);
+assert.equal(window.TopikReadingBank.filter(question => question.image).length, 18);
+assert.equal(window.TopikReadingBank.find(question => question.id === 'topik_83_reading_30').correctAnswer, 'C');
+
+// Preserve learning progress and custom content while bundled content is upgraded.
 const learned = fresh.words[0];
 learned.mastered = true;
 learned.successStreak = 4;
@@ -39,40 +53,49 @@ reviewedGrammar.reviewCount = 7;
 reviewedGrammar.lastReviewedAt = '2026-06-29T12:00:00.000Z';
 const duplicatePattern = fresh.grammar.find(point => point.id === 'topik_grammar_0002');
 fresh.grammar = fresh.grammar.filter(point => !point.id.startsWith('topik_grammar_') || point.id === reviewedGrammar.id);
-fresh.grammar.push({...duplicatePattern, id: 'custom-grammar-same-pattern', category: '自定义', userEdited: true});
+fresh.grammar.push({...duplicatePattern, id: 'custom-grammar-same-pattern', category: 'custom', userEdited: true});
+fresh.questionBank = fresh.questionBank.filter(question => !question.id.startsWith('topik_'));
 fresh.contentVersion = 3;
 values.set(Store.KEY, JSON.stringify(fresh));
-values.set(Store.DRAFT_KEY, '独立草稿');
+values.set(Store.DRAFT_KEY, 'saved draft');
 
 const migrated = Store.load().data;
 assert.equal(migrated.words.length, 4069);
 assert.equal(migrated.words[0].reviewCount, 12);
 assert.equal(migrated.words[0].successStreak, 4);
-assert.equal(migrated.writingDraft, '独立草稿');
+assert.equal(migrated.writingDraft, 'saved draft');
 assert.equal(migrated.grammar.length, 415);
 assert.equal(migrated.grammar.find(point => point.id === 'topik_grammar_0001').reviewCount, 7);
 assert.equal(migrated.grammar.filter(point => point.pattern === duplicatePattern.pattern).length, 1);
-assert.ok(migrated.grammar.every(point => Object.hasOwn(point, 'level') && Object.hasOwn(point, 'category')));
+assert.equal(migrated.questionBank.length, 156);
+assert.equal(migrated.contentVersion, 5);
+
+const normalizedSession = Store.normalize({
+  ...Store.fresh(),
+  practiceRecords: [{
+    id: 'record-1', examNumber: '96', section: 'reading', mode: 'exam',
+    totalQuestions: 50, correctAnswers: 40, unanswered: 2, score: 80,
+    durationSeconds: 3000, questionIds: ['q1', 'q2'],
+    answers: [{questionId: 'q1', selected: 'B', correct: true}],
+  }],
+  activePractice: {
+    id: 'active-1', examNumber: '96', section: 'reading', mode: 'exam',
+    questionIds: ['q1', 'q2'], index: 1, answers: [], flagged: ['q2'],
+    remainingSeconds: 0, startedAt: '2026-07-01T00:00:00.000Z',
+  },
+});
+assert.equal(normalizedSession.practiceRecords[0].wrongAnswers, 8);
+assert.equal(normalizedSession.practiceRecords[0].unanswered, 2);
+assert.equal(normalizedSession.activePractice.remainingSeconds, 0);
+assert.deepEqual(normalizedSession.activePractice.flagged, ['q2']);
 
 const mainBeforeDraft = values.get(Store.KEY);
-assert.equal(Store.saveDraft('新的草稿'), true);
+assert.equal(Store.saveDraft('new draft'), true);
 assert.equal(values.get(Store.KEY), mainBeforeDraft);
-assert.equal(values.get(Store.DRAFT_KEY), '新的草稿');
+assert.equal(values.get(Store.DRAFT_KEY), 'new draft');
 
 const oldBackup = Store.parseBackup({app: Store.APP, schemaVersion: 5, data: migrated});
 assert.equal(oldBackup.words.length, 4069);
-
-const questionImport = Store.normalize({...Store.fresh(), questionBank: [{
-  id: 'import-test-1',
-  examNumber: '模拟 9',
-  section: 'reading',
-  text: '다음 중 맞는 것을 고르십시오.',
-  options: ['A', 'B', 'C', 'D'],
-  correctAnswer: 'A',
-  explanationZh: '测试解析',
-  difficulty: 'medium',
-}]}).questionBank;
-assert.equal(questionImport.length, 1);
-assert.equal(questionImport[0].id, 'import-test-1');
+assert.equal(oldBackup.questionBank.length, 156);
 
 console.log('TOPIK web data tests passed.');

@@ -1,5 +1,6 @@
-const CACHE='topik-study-shell-v2';
-const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg','./assets/css/app.css?v=20260630-4','./assets/js/vocab-batch1.js?v=20260630-4','./assets/js/vocab-4000.js?v=20260630-4','./assets/js/grammar-400.js?v=20260630-4','./assets/js/data.js?v=20260630-4','./assets/js/storage.js?v=20260630-4','./assets/js/app.js?v=20260630-4'];
+const CACHE='topik-study-shell-v3';
+const QUESTION_IMAGES=['83','91','96'].flatMap(exam=>[5,6,7,8,9,10].map(number=>`./assets/questions/${exam}/q${String(number).padStart(2,'0')}.png`));
+const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg','./assets/css/app.css?v=20260701-1','./assets/js/vocab-batch1.js?v=20260701-1','./assets/js/vocab-4000.js?v=20260701-1','./assets/js/grammar-400.js?v=20260701-1','./assets/js/topik-reading-bank.js?v=20260701-1','./assets/js/data.js?v=20260701-1','./assets/js/storage.js?v=20260701-1','./assets/js/app.js?v=20260701-1',...QUESTION_IMAGES];
 
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});

@@ -13,9 +13,12 @@
 - 韩语拼写练习、字符错误提示、无限重试、双向选择题和错词本；每题只记录一次最终结果
 - 语法笔记、搜索、等级筛选和复习记录；现有 15 条核心笔记之外另内置 400 条中高级语法
 - 本地写作记录，以及 OpenAI 韩语写作批改、错误对照和中文解释
-- 34 份历届 TOPIK PDF，PDF 模式继续保留
+- 36 份历届 TOPIK PDF，新增第 96 届阅读试卷和答案，PDF 模式继续保留
 - 可手动维护或从 JSON 批量导入的阅读、听力、写作题库（当前练习引擎先开放阅读四选一）
-- 在线阅读练习、即时判题、中文/韩语解析和自动成绩记录
+- 第 83、91、96 届共 150 道在线阅读真题，包含原题图文材料和经过官方答案 PDF 校验的答案
+- 两种答题方式：70 分钟整套模拟，以及逐题即时判分精练
+- 整套模拟支持答题卡、自由跳题、题目标记、退出续做、自动交卷、成绩统计与逐题复盘
+- 在线阅读练习包含中文解题提示、来源状态和自动成绩记录
 - 自动错题本、错误次数、重新练习和已掌握状态
 - 真题完成状态、分数、正确率、错题笔记和复习日期
 - 最近七天学习统计、记忆复习状态、数据质量提示和真题成绩历史
@@ -59,6 +62,13 @@ korean,chinese,partOfSpeech,example,exampleZh,topikLevel,category,mastered,revie
 ## 导入题库
 
 在“历届真题 → 题库管理”中点击“导入 JSON”。文件可以直接使用数组，也可以使用 `questions` 或 `questionBank` 字段。每题包含 `examNumber`、`section`、`text`、四个 `options`、`correctAnswer`、`explanationZh`、`explanationKo`、`difficulty` 和 `related`。
+
+## 在线真题来源与说明
+
+- 内置在线题库来自公开的第 83、91、96 届 TOPIK II 阅读试题，并逐题核对对应官方答案 PDF。
+- 第 83 届第 30 题的第三方网页答案与官方 PDF 不一致，本站以官方 PDF 的 ③（选项 C）为准。
+- 第 96 届第 42～43 题的共用原文没有完整公开；为了维持整套 50 题练习，这两题使用模拟补全文，并在界面中显著标记。其余 148 题标记为公开真题。
+- 题库生成脚本位于 `scripts/build-reading-bank.js`，可重新抓取、规范化并生成静态题库和本地图片。网站运行时不依赖第三方服务器。
 
 ## 本地打开
 
@@ -106,10 +116,16 @@ assets/
   js/storage.js
   js/app.js
   js/grammar-400.js
+  js/topik-reading-bank.js
   js/vocab-batch1.js
   js/vocab-4000.js
+  questions/
+    83/
+    91/
+    96/
   icon.svg
 resources/past-papers/
+scripts/build-reading-bank.js
 manifest.webmanifest
 sw.js
 netlify.toml
