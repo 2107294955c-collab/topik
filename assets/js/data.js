@@ -21,5 +21,6 @@
     {id:'seed-question-6',examNumber:'模拟 2',section:'reading',text:'다음 내용과 같은 것을 고르십시오.\n최근 한 조사에 따르면 재택근무를 경험한 직장인의 절반 이상이 출퇴근 시간이 줄어든 점을 가장 큰 장점으로 꼽았다. 반면 동료와의 소통이 어려워졌다는 응답도 적지 않았다.',options:['재택근무를 한 사람 대부분이 소통에 만족했다.','출퇴근 시간 감소가 재택근무의 대표적인 장점으로 나타났다.','재택근무를 경험한 직장인은 절반보다 적었다.','직장인들은 출퇴근 시간보다 업무량을 중요하게 생각했다.'],correctAnswer:'B',explanationZh:'调查中超过一半的人把通勤时间减少选为最大优点，因此B与原文一致。',explanationKo:'절반 이상이 출퇴근 시간 감소를 가장 큰 장점으로 선택했으므로 B가 맞습니다.',difficulty:'medium',related:'-에 따르면；꼽다；반면',createdAt:'2026-06-30T00:00:00.000Z'}
   ];
   questions.push(...(window.TopikReadingBank||[]).map(question=>({...question,options:[...question.options]})));
+  questions.push(...(window.TopikListeningBank||[]).map(question=>({...question,options:[...question.options],optionImages:[...(question.optionImages||[])]})));
   window.TopikData={words,grammar,prompts,papers,questions};
 })();

@@ -3,7 +3,7 @@
   const DRAFT_KEY='topik-study-writing-draft-v1';
   const APP='topik-study';
   const VERSION=7;
-  const CONTENT_VERSION=6;
+  const CONTENT_VERSION=7;
   const dataSource=()=>window.TopikData;
   const isObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
   const text=(value,max=20000)=>typeof value==='string'?value.trim().slice(0,max):'';
@@ -34,7 +34,8 @@
     const questionBank=Array.isArray(data.questionBank)?data.questionBank.filter(isObject).map((item,index)=>{
       const options=Array.isArray(item.options)?item.options.slice(0,4).map(option=>text(option,1000)):[];
       const questionNumber=numberOrNull(item.questionNumber,1,999);
-      return {id:text(item.id,100)||`question-${Date.now()}-${index}`,examNumber:text(item.examNumber,100),questionNumber:questionNumber===null?null:Math.floor(questionNumber),section:sections.has(item.section)?item.section:'reading',text:text(item.text,10000),passage:text(item.passage,50000),insertSentence:text(item.insertSentence,10000),image:text(item.image,1000),options,correctAnswer:answers.has(item.correctAnswer)?item.correctAnswer:'A',explanationZh:text(item.explanationZh,30000),explanationKo:text(item.explanationKo,30000),difficulty:difficulties.has(item.difficulty)?item.difficulty:'medium',related:text(item.related,5000),points:numberOrNull(item.points,0,100)||2,sourceUrl:text(item.sourceUrl,2000),sourceStatus:sourceStatuses.has(item.sourceStatus)?item.sourceStatus:'manual',createdAt:isoOrNull(item.createdAt)||new Date().toISOString(),userEdited:item.userEdited===true};
+      const optionImages=Array.isArray(item.optionImages)?item.optionImages.slice(0,4).map(value=>text(value,1000)):[];
+      return {id:text(item.id,100)||`question-${Date.now()}-${index}`,examNumber:text(item.examNumber,100),questionNumber:questionNumber===null?null:Math.floor(questionNumber),section:sections.has(item.section)?item.section:'reading',text:text(item.text,10000),passage:text(item.passage,50000),insertSentence:text(item.insertSentence,10000),image:text(item.image,1000),optionImages,transcript:text(item.transcript,50000),options,correctAnswer:answers.has(item.correctAnswer)?item.correctAnswer:'A',explanationZh:text(item.explanationZh,30000),explanationKo:text(item.explanationKo,30000),difficulty:difficulties.has(item.difficulty)?item.difficulty:'medium',related:text(item.related,5000),points:numberOrNull(item.points,0,100)||2,sourceUrl:text(item.sourceUrl,2000),sourceStatus:sourceStatuses.has(item.sourceStatus)?item.sourceStatus:'manual',createdAt:isoOrNull(item.createdAt)||new Date().toISOString(),userEdited:item.userEdited===true};
     }).filter(item=>item.examNumber&&item.text&&item.options.length===4&&item.options.every(Boolean)):dataSource().questions.map(x=>({...x,options:[...x.options]}));
     const practiceRecords=Array.isArray(data.practiceRecords)?data.practiceRecords.filter(isObject).map((item,index)=>{
       const rawAnswers=Array.isArray(item.answers)?item.answers.filter(isObject).map(answer=>({questionId:text(answer.questionId,100),selected:answers.has(answer.selected)?answer.selected:'A',correct:answer.correct===true})).filter(answer=>answer.questionId):[];

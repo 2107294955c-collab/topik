@@ -10,14 +10,15 @@
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260701-5">
-  <script defer src="assets/js/vocab-batch1.js?v=20260701-5"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260701-5"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260701-5"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260701-5"></script>
-  <script defer src="assets/js/data.js?v=20260701-5"></script>
-  <script defer src="assets/js/storage.js?v=20260701-5"></script>
-  <script defer src="assets/js/app.js?v=20260701-5"></script>
+  <link rel="stylesheet" href="assets/css/app.css?v=20260701-6">
+  <script defer src="assets/js/vocab-batch1.js?v=20260701-6"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260701-6"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260701-6"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260701-6"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260701-6"></script>
+  <script defer src="assets/js/data.js?v=20260701-6"></script>
+  <script defer src="assets/js/storage.js?v=20260701-6"></script>
+  <script defer src="assets/js/app.js?v=20260701-6"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -99,7 +100,7 @@
       </section>
 
       <section id="papers" class="page" aria-labelledby="papersTitle">
-        <header class="page-header"><div><span class="eyebrow">PAST TESTS</span><h1 id="papersTitle">历届真题</h1><p>PDF 资料与在线阅读题练习并存。</p></div><button class="primary" id="openPracticeButton">练习题目</button></header>
+        <header class="page-header"><div><span class="eyebrow">PAST TESTS</span><h1 id="papersTitle">历届真题</h1><p>PDF 资料与在线阅读、听力练习并存。</p></div><button class="primary" id="openPracticeButton">练习题目</button></header>
         <div class="paper-tabs" role="tablist" aria-label="真题学习模式"><button class="active" data-paper-mode="pdf">PDF 资料</button><button data-paper-mode="practice">在线练习</button><button data-paper-mode="wrong">错题本 <span id="wrongTabCount">0</span></button><button data-paper-mode="bank">题库管理</button></div>
         <div id="paperPdfView" class="paper-mode-view active">
           <div class="toolbar"><label class="search-field"><span>⌕</span><input id="paperSearch" placeholder="搜索届数或资料类型"></label><select id="paperFilter" aria-label="筛选真题"><option value="all">全部状态</option><option value="not_started">未开始</option><option value="in_progress">进行中</option><option value="completed">已完成</option></select></div>
@@ -107,11 +108,12 @@
         </div>
         <div id="paperPracticeView" class="paper-mode-view">
           <section id="practiceSetup" class="card practice-setup">
-            <div class="setup-heading"><div><span class="eyebrow">REAL TOPIK READING</span><h2>真题在线练习</h2><p>已收录目前公开可练习的 12 届 TOPIK II 阅读，共 600 题，包含原题图片和答案。</p></div><span class="source-chip">600 题</span></div>
+            <div class="setup-heading"><div><span class="eyebrow">REAL TOPIK PRACTICE</span><h2>真题在线练习</h2><p>已收录 12 届 TOPIK II 阅读与听力，共 1,200 题；听力可配合另一台设备播放录音。</p></div><span class="source-chip">1,200 题</span></div>
             <div class="source-note">收录第 35、36、37、41、47、52、60、64、83、91、96、102 届。第 96 届 42～43 题、第 102 届 23～24 与 42～43 题因原文未完整公开，已明确标记为“模拟补全文”；其余 594 题标记为公开真题。</div>
-            <div class="form-grid practice-filters"><label>练习范围<select id="practiceScopeSelect"><option value="full">整届 50 题</option><option value="mini">本届随机 10 题</option><option value="category">薄弱题型专项（最多10题）</option><option value="wrong">错题重练</option></select></label><label id="practiceExamWrap">考试编号<select id="practiceExamSelect"></select></label><label id="practiceCategoryWrap" hidden>专项题型<select id="practiceCategorySelect"></select></label><label>练习部分<select id="practiceSectionSelect"><option value="reading">阅读 Reading</option><option value="listening" disabled>听力 Listening（后续开放）</option><option value="writing" disabled>写作 Writing（后续开放）</option></select></label></div>
+            <div class="listening-device-note" id="listeningDeviceNote" hidden><strong>双设备听力模式</strong><span>请在另一台设备播放对应届次的听力录音，本网站只负责答题、计时与判分。开始后默认 60 分钟。</span></div>
+            <div class="form-grid practice-filters"><label>练习范围<select id="practiceScopeSelect"><option value="full">整届 50 题</option><option value="mini">本届随机 10 题</option><option value="category">薄弱题型专项（最多10题）</option><option value="wrong">错题重练</option></select></label><label id="practiceExamWrap">考试编号<select id="practiceExamSelect"></select></label><label id="practiceCategoryWrap" hidden>专项题型<select id="practiceCategorySelect"></select></label><label>练习部分<select id="practiceSectionSelect"><option value="reading">阅读 Reading</option><option value="listening">听力 Listening</option><option value="writing" disabled>写作 Writing（后续开放）</option></select></label></div>
             <div class="practice-mode-picker">
-              <label class="mode-choice"><input type="radio" name="practiceMode" value="exam" checked><span><strong>整套模拟</strong><small>70 分钟计时 · 保留答题卡 · 交卷后统一判分</small></span></label>
+               <label class="mode-choice"><input type="radio" name="practiceMode" value="exam" checked><span><strong>整套模拟</strong><small id="practiceTimingHelp">阅读 70 分钟计时 · 保留答题卡 · 交卷后统一判分</small></span></label>
               <label class="mode-choice"><input type="radio" name="practiceMode" value="instant"><span><strong>逐题精练</strong><small>每题立即判分并显示中文解析</small></span></label>
             </div>
             <button class="primary" id="startPracticeButton">开始练习</button>
@@ -127,13 +129,13 @@
                 <p id="practicePassage" class="practice-passage" hidden></p>
                 <img id="practiceImage" class="practice-image" alt="真题图文材料" hidden>
                 <div id="practiceOptions" class="practice-options"></div>
-                <div id="practiceFeedback" class="practice-feedback" hidden><h3 id="practiceFeedbackTitle"></h3><p id="practiceExplanationZh"></p><p id="practiceExplanationKo" class="muted"></p></div>
+                <div id="practiceFeedback" class="practice-feedback" hidden><h3 id="practiceFeedbackTitle"></h3><p id="practiceExplanationZh"></p><details id="practiceTranscriptWrap" class="transcript-panel" hidden><summary>查看听力原文</summary><p id="practiceTranscript" lang="ko"></p></details><p id="practiceExplanationKo" class="muted"></p></div>
                 <div class="question-controls"><button class="secondary" id="previousPracticeButton">上一题</button><button class="primary" id="nextPracticeButton">下一题</button></div>
               </article>
               <aside id="practiceNavigatorPanel" class="card question-navigator"><div class="navigator-head"><div><span class="eyebrow">ANSWER SHEET</span><h3>答题卡</h3></div><strong id="practiceAnsweredCount">0 / 50</strong></div><div id="practiceNavigator" class="navigator-grid"></div><div class="navigator-legend"><span><i class="answered"></i>已答</span><span><i class="flagged"></i>标记</span><span><i></i>未答</span></div><button class="primary" id="submitPracticeButton">提交整套答案</button></aside>
             </div>
           </section>
-          <section id="practiceResult" class="card quiz-result" hidden><span class="result-icon">✓</span><h2>阅读练习完成</h2><strong id="practiceResultScore"></strong><p id="practiceResultText"></p><div id="practiceResultBreakdown" class="result-breakdown"></div><div class="result-actions"><button class="secondary" id="backToPracticeSetup">返回选择</button><button class="secondary" id="reviewPracticeButton">复盘本套</button><button class="primary" id="repeatPracticeButton">再练一次</button></div></section>
+          <section id="practiceResult" class="card quiz-result" hidden><span class="result-icon">✓</span><h2 id="practiceResultTitle">练习完成</h2><strong id="practiceResultScore"></strong><p id="practiceResultText"></p><div id="practiceResultBreakdown" class="result-breakdown"></div><div class="result-actions"><button class="secondary" id="backToPracticeSetup">返回选择</button><button class="secondary" id="reviewPracticeButton">复盘本套</button><button class="primary" id="repeatPracticeButton">再练一次</button></div></section>
           <section class="section-block"><div class="section-heading"><div><span class="eyebrow">PRACTICE HISTORY</span><h2>练习记录</h2></div></div><div id="practiceHistory" class="practice-history"></div></section>
         </div>
         <div id="paperWrongView" class="paper-mode-view"><div class="section-heading"><div><span class="eyebrow">WRONG ANSWERS</span><h2>错题本</h2><p class="muted">答错的题目会自动出现在这里。</p></div><select id="wrongFilter"><option value="learning">待掌握</option><option value="mastered">已掌握</option><option value="all">全部错题</option></select></div><div id="wrongQuestionList" class="wrong-grid"></div></div>
