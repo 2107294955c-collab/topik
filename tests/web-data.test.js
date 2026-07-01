@@ -17,8 +17,12 @@ require('../assets/js/storage.js');
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
-assert.equal(Store.VERSION, 6);
+assert.equal(Store.VERSION, 7);
 assert.equal(Store.CONTENT_VERSION, 5);
+assert.deepEqual(fresh.studyProfile, {
+  targetLevel: '6', examDate: '', dailyWordTarget: 10,
+  dailyGrammarTarget: 2, dailyQuestionTarget: 10,
+});
 assert.equal(fresh.words.length, 4069);
 assert.equal(window.TopikGrammar400.length, 400);
 assert.equal(fresh.grammar.length, 415);
@@ -55,6 +59,7 @@ const duplicatePattern = fresh.grammar.find(point => point.id === 'topik_grammar
 fresh.grammar = fresh.grammar.filter(point => !point.id.startsWith('topik_grammar_') || point.id === reviewedGrammar.id);
 fresh.grammar.push({...duplicatePattern, id: 'custom-grammar-same-pattern', category: 'custom', userEdited: true});
 fresh.questionBank = fresh.questionBank.filter(question => !question.id.startsWith('topik_'));
+fresh.studyProfile = {targetLevel: '5', examDate: '2026-10-18', dailyWordTarget: 15, dailyGrammarTarget: 3, dailyQuestionTarget: 12};
 fresh.contentVersion = 3;
 values.set(Store.KEY, JSON.stringify(fresh));
 values.set(Store.DRAFT_KEY, 'saved draft');
@@ -69,24 +74,28 @@ assert.equal(migrated.grammar.find(point => point.id === 'topik_grammar_0001').r
 assert.equal(migrated.grammar.filter(point => point.pattern === duplicatePattern.pattern).length, 1);
 assert.equal(migrated.questionBank.length, 156);
 assert.equal(migrated.contentVersion, 5);
+assert.deepEqual(migrated.studyProfile, fresh.studyProfile);
 
 const normalizedSession = Store.normalize({
   ...Store.fresh(),
   practiceRecords: [{
-    id: 'record-1', examNumber: '96', section: 'reading', mode: 'exam',
+    id: 'record-1', examNumber: '96', section: 'reading', mode: 'exam', scope: 'category', category: '中心主旨',
     totalQuestions: 50, correctAnswers: 40, unanswered: 2, score: 80,
     durationSeconds: 3000, questionIds: ['q1', 'q2'],
     answers: [{questionId: 'q1', selected: 'B', correct: true}],
   }],
   activePractice: {
-    id: 'active-1', examNumber: '96', section: 'reading', mode: 'exam',
+    id: 'active-1', examNumber: '96', section: 'reading', mode: 'exam', scope: 'wrong',
     questionIds: ['q1', 'q2'], index: 1, answers: [], flagged: ['q2'],
     remainingSeconds: 0, startedAt: '2026-07-01T00:00:00.000Z',
   },
 });
 assert.equal(normalizedSession.practiceRecords[0].wrongAnswers, 8);
 assert.equal(normalizedSession.practiceRecords[0].unanswered, 2);
+assert.equal(normalizedSession.practiceRecords[0].scope, 'category');
+assert.equal(normalizedSession.practiceRecords[0].category, '中心主旨');
 assert.equal(normalizedSession.activePractice.remainingSeconds, 0);
+assert.equal(normalizedSession.activePractice.scope, 'wrong');
 assert.deepEqual(normalizedSession.activePractice.flagged, ['q2']);
 
 const mainBeforeDraft = values.get(Store.KEY);
@@ -97,5 +106,8 @@ assert.equal(values.get(Store.DRAFT_KEY), 'new draft');
 const oldBackup = Store.parseBackup({app: Store.APP, schemaVersion: 5, data: migrated});
 assert.equal(oldBackup.words.length, 4069);
 assert.equal(oldBackup.questionBank.length, 156);
+const oldDataWithoutProfile = {...migrated};
+delete oldDataWithoutProfile.studyProfile;
+assert.deepEqual(Store.merge(migrated, oldDataWithoutProfile).studyProfile, migrated.studyProfile);
 
 console.log('TOPIK web data tests passed.');
