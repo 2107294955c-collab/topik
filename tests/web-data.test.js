@@ -18,7 +18,7 @@ require('../assets/js/storage.js');
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
-assert.equal(Store.VERSION, 7);
+assert.equal(Store.VERSION, 8);
 assert.equal(Store.CONTENT_VERSION, 7);
 assert.deepEqual(fresh.studyProfile, {
   targetLevel: '6', examDate: '', dailyWordTarget: 10,
@@ -33,6 +33,7 @@ assert.ok(fresh.words.every(word => word.learningState && word.easeFactor >= 1.3
 assert.equal(window.TopikReadingBank.length, 600);
 assert.equal(window.TopikListeningBank.length, 600);
 assert.equal(fresh.questionBank.length, 1206);
+assert.deepEqual(fresh.questionBookmarks, []);
 assert.equal(window.TopikData.papers.length, 40);
 assert.equal(new Set(window.TopikReadingBank.map(question => question.id)).size, 600);
 assert.ok(window.TopikReadingBank.every(question =>
@@ -68,6 +69,7 @@ const duplicatePattern = fresh.grammar.find(point => point.id === 'topik_grammar
 fresh.grammar = fresh.grammar.filter(point => !point.id.startsWith('topik_grammar_') || point.id === reviewedGrammar.id);
 fresh.grammar.push({...duplicatePattern, id: 'custom-grammar-same-pattern', category: 'custom', userEdited: true});
 fresh.questionBank = fresh.questionBank.filter(question => !question.id.startsWith('topik_') || ['83', '91', '96'].includes(question.examNumber));
+fresh.questionBookmarks = ['topik_83_reading_01'];
 fresh.studyProfile = {targetLevel: '5', examDate: '2026-10-18', dailyWordTarget: 15, dailyGrammarTarget: 3, dailyQuestionTarget: 12};
 fresh.contentVersion = 3;
 values.set(Store.KEY, JSON.stringify(fresh));
@@ -82,6 +84,7 @@ assert.equal(migrated.grammar.length, 415);
 assert.equal(migrated.grammar.find(point => point.id === 'topik_grammar_0001').reviewCount, 7);
 assert.equal(migrated.grammar.filter(point => point.pattern === duplicatePattern.pattern).length, 1);
 assert.equal(migrated.questionBank.length, 1206);
+assert.deepEqual(migrated.questionBookmarks, ['topik_83_reading_01']);
 assert.equal(migrated.contentVersion, 7);
 assert.deepEqual(migrated.studyProfile, fresh.studyProfile);
 
@@ -106,6 +109,7 @@ assert.equal(normalizedSession.practiceRecords[0].category, '中心主旨');
 assert.equal(normalizedSession.activePractice.remainingSeconds, 0);
 assert.equal(normalizedSession.activePractice.scope, 'wrong');
 assert.deepEqual(normalizedSession.activePractice.flagged, ['q2']);
+assert.deepEqual(Store.normalize({...Store.fresh(), questionBookmarks: ['q1', 'q1', '', 'q2']}).questionBookmarks, ['q1', 'q2']);
 
 const mainBeforeDraft = values.get(Store.KEY);
 assert.equal(Store.saveDraft('new draft'), true);
@@ -118,5 +122,6 @@ assert.equal(oldBackup.questionBank.length, 1206);
 const oldDataWithoutProfile = {...migrated};
 delete oldDataWithoutProfile.studyProfile;
 assert.deepEqual(Store.merge(migrated, oldDataWithoutProfile).studyProfile, migrated.studyProfile);
+assert.deepEqual(Store.merge({...migrated, questionBookmarks: ['q1']}, {...oldDataWithoutProfile, questionBookmarks: ['q2']}).questionBookmarks, ['q1', 'q2']);
 
 console.log('TOPIK web data tests passed.');

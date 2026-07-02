@@ -10,15 +10,15 @@
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260702-1">
-  <script defer src="assets/js/vocab-batch1.js?v=20260702-1"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260702-1"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260702-1"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260702-1"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260702-1"></script>
-  <script defer src="assets/js/data.js?v=20260702-1"></script>
-  <script defer src="assets/js/storage.js?v=20260702-1"></script>
-  <script defer src="assets/js/app.js?v=20260702-1"></script>
+  <link rel="stylesheet" href="assets/css/app.css?v=20260702-2">
+  <script defer src="assets/js/vocab-batch1.js?v=20260702-2"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260702-2"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260702-2"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260702-2"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260702-2"></script>
+  <script defer src="assets/js/data.js?v=20260702-2"></script>
+  <script defer src="assets/js/storage.js?v=20260702-2"></script>
+  <script defer src="assets/js/app.js?v=20260702-2"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -111,7 +111,7 @@
             <div class="setup-heading"><div><span class="eyebrow">REAL TOPIK PRACTICE</span><h2>真题在线练习</h2><p>已收录 12 届 TOPIK II 阅读与听力，共 1,200 题；听力可配合另一台设备播放录音。</p></div><span class="source-chip">1,200 题</span></div>
             <div class="source-note">收录第 35、36、37、41、47、52、60、64、83、91、96、102 届。第 96 届 42～43 题、第 102 届 23～24 与 42～43 题因原文未完整公开，已明确标记为“模拟补全文”；其余 594 题标记为公开真题。</div>
             <div class="listening-device-note" id="listeningDeviceNote" hidden><strong>双设备听力模式</strong><span>请在另一台设备播放对应届次的听力录音，本网站只负责答题、计时与判分。开始后默认 60 分钟。</span></div>
-            <div class="form-grid practice-filters"><label>练习范围<select id="practiceScopeSelect"><option value="full">整届 50 题</option><option value="mini">本届随机 10 题</option><option value="category">薄弱题型专项（最多10题）</option><option value="wrong">错题重练</option></select></label><label id="practiceExamWrap">考试编号<select id="practiceExamSelect"></select></label><label id="practiceCategoryWrap" hidden>专项题型<select id="practiceCategorySelect"></select></label><label>练习部分<select id="practiceSectionSelect"><option value="reading">阅读 Reading</option><option value="listening">听力 Listening</option><option value="writing" disabled>写作 Writing（后续开放）</option></select></label></div>
+            <div class="form-grid practice-filters"><label>练习范围<select id="practiceScopeSelect"><option value="full">整届 50 题</option><option value="mini">本届随机 10 题</option><option value="category">薄弱题型专项（最多10题）</option><option value="bookmark">收藏题专项</option><option value="wrong">错题重练</option></select></label><label id="practiceExamWrap">考试编号<select id="practiceExamSelect"></select></label><label id="practiceCategoryWrap" hidden>专项题型<select id="practiceCategorySelect"></select></label><label>练习部分<select id="practiceSectionSelect"><option value="reading">阅读 Reading</option><option value="listening">听力 Listening</option><option value="writing" disabled>写作 Writing（后续开放）</option></select></label></div>
             <div class="practice-mode-picker">
                <label class="mode-choice"><input type="radio" name="practiceMode" value="exam" checked><span><strong>整套模拟</strong><small id="practiceTimingHelp">阅读 70 分钟计时 · 保留答题卡 · 交卷后统一判分</small></span></label>
               <label class="mode-choice"><input type="radio" name="practiceMode" value="instant"><span><strong>逐题精练</strong><small>每题立即判分并显示中文解析</small></span></label>
@@ -123,7 +123,7 @@
             <div class="mini-progress"><i id="practiceBar"></i></div>
             <div class="mock-layout">
               <article class="card mock-question-card">
-                <div class="question-meta"><span id="practiceDifficulty" class="status-chip"></span><span id="practiceSourceStatus" class="status-chip"></span><span id="practiceRelated"></span><a id="practiceSourceLink" class="source-link" target="_blank" rel="noopener">查看来源</a><button class="flag-button" id="practiceFlagButton">☆ 标记</button></div>
+                <div class="question-meta"><span id="practiceDifficulty" class="status-chip"></span><span id="practiceSourceStatus" class="status-chip"></span><span id="practiceRelated"></span><a id="practiceSourceLink" class="source-link" target="_blank" rel="noopener">查看来源</a><span class="question-meta-actions"><button class="flag-button" id="practiceBookmarkButton">☆ 收藏</button><button class="flag-button" id="practiceFlagButton">⚑ 标记</button></span></div>
                 <h2 id="practiceQuestionText" class="practice-question"></h2>
                 <blockquote id="practiceInsertSentence" class="insert-sentence" hidden></blockquote>
                 <p id="practicePassage" class="practice-passage" hidden></p>
