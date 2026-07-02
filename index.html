@@ -10,15 +10,15 @@
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260702-2">
-  <script defer src="assets/js/vocab-batch1.js?v=20260702-2"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260702-2"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260702-2"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260702-2"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260702-2"></script>
-  <script defer src="assets/js/data.js?v=20260702-2"></script>
-  <script defer src="assets/js/storage.js?v=20260702-2"></script>
-  <script defer src="assets/js/app.js?v=20260702-2"></script>
+  <link rel="stylesheet" href="assets/css/app.css?v=20260702-3">
+  <script defer src="assets/js/vocab-batch1.js?v=20260702-3"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260702-3"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260702-3"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260702-3"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260702-3"></script>
+  <script defer src="assets/js/data.js?v=20260702-3"></script>
+  <script defer src="assets/js/storage.js?v=20260702-3"></script>
+  <script defer src="assets/js/app.js?v=20260702-3"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -70,7 +70,7 @@
         <div id="vocabFlashcardView" class="mode-view">
           <div class="study-toolbar"><div><span class="eyebrow">FLASHCARDS</span><strong id="flashProgress">1 / 1</strong></div><div class="study-toolbar-actions"><button class="text-button" id="flashSpeakButton">🔊 发音</button><button class="text-button" id="shuffleFlashcards">随机排序</button></div></div>
           <button id="flashcard" class="flashcard" aria-label="翻转单词卡"><span class="flash-hint">点击卡片查看答案 · 左右滑动切换</span><strong id="flashFront"></strong><div id="flashBack" class="flash-back"><span id="flashMeaning"></span><small id="flashMeta"></small><p id="flashExample"></p><p id="flashExampleZh" class="muted"></p></div></button>
-          <div class="flash-nav"><button class="secondary" id="flashPrevious">← 上一个</button><button class="secondary" id="flashNext">下一个 →</button></div><div class="flash-actions rating-actions"><button class="rating-button again" data-flash-rating="again"><strong>重来</strong><small>10 分钟</small></button><button class="rating-button hard" data-flash-rating="hard"><strong>困难</strong><small>1 天</small></button><button class="rating-button good" data-flash-rating="good"><strong>记得</strong><small>按计划</small></button><button class="rating-button easy" data-flash-rating="easy"><strong>简单</strong><small>更久</small></button></div>
+          <div class="flash-nav"><button type="button" class="secondary" id="flashPrevious">← 上一个</button><button type="button" class="secondary" id="flashNext">下一个 →</button></div><p id="flashRatingGuide" class="flash-rating-guide" aria-live="polite">先点击卡片查看答案，再选择记忆程度。</p><div id="flashRatingPanel" class="flash-actions rating-actions" hidden><button type="button" class="rating-button again" data-flash-rating="again"><strong>重来</strong><small>10 分钟</small></button><button type="button" class="rating-button hard" data-flash-rating="hard"><strong>困难</strong><small>1 天</small></button><button type="button" class="rating-button good" data-flash-rating="good"><strong>记得</strong><small>按计划</small></button><button type="button" class="rating-button easy" data-flash-rating="easy"><strong>简单</strong><small>更久</small></button></div>
         </div>
         <div id="vocabSpellingView" class="mode-view">
           <section class="card spelling-card"><div class="study-toolbar"><div><span class="eyebrow">SPELLING</span><strong id="spellingProgress">1 / 1</strong></div><button class="text-button" id="skipSpelling">跳过</button></div><p id="spellingMeaning" class="spelling-meaning"></p><p id="spellingExample" class="spelling-example"></p><p id="spellingExampleZh" class="muted"></p><label class="field-label" for="spellingInput">输入韩语单词</label><div class="spelling-input-row"><input id="spellingInput" lang="ko" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="primary" id="checkSpelling">检查</button></div><div id="spellingFeedback" class="spelling-feedback" aria-live="polite"></div><button class="secondary" id="nextSpelling" hidden>下一题</button></section>

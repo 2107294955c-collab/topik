@@ -1,7 +1,7 @@
-const CACHE='topik-study-shell-v10';
+const CACHE='topik-study-shell-v11';
 const QUESTION_IMAGES=['35','36','37','41','47','52','60','64','83','91','96','102'].flatMap(exam=>[5,6,7,8,9,10].map(number=>`./assets/questions/${exam}/q${String(number).padStart(2,'0')}.png`));
 const LISTENING_IMAGES=['35','36','37','41','47','52','60','64','83','91','96','102'].flatMap(exam=>[1,2,3].flatMap(number=>['a','b','c','d'].map(letter=>`./assets/questions-listening/${exam}/q${String(number).padStart(2,'0')}-${letter}.png`)));
-const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg','./assets/css/app.css?v=20260702-2','./assets/js/vocab-batch1.js?v=20260702-2','./assets/js/vocab-4000.js?v=20260702-2','./assets/js/grammar-400.js?v=20260702-2','./assets/js/topik-reading-bank.js?v=20260702-2','./assets/js/topik-listening-bank.js?v=20260702-2','./assets/js/data.js?v=20260702-2','./assets/js/storage.js?v=20260702-2','./assets/js/app.js?v=20260702-2',...QUESTION_IMAGES,...LISTENING_IMAGES];
+const CORE=['./','./index.html','./manifest.webmanifest','./assets/icon.svg','./assets/css/app.css?v=20260702-3','./assets/js/vocab-batch1.js?v=20260702-3','./assets/js/vocab-4000.js?v=20260702-3','./assets/js/grammar-400.js?v=20260702-3','./assets/js/topik-reading-bank.js?v=20260702-3','./assets/js/topik-listening-bank.js?v=20260702-3','./assets/js/data.js?v=20260702-3','./assets/js/storage.js?v=20260702-3','./assets/js/app.js?v=20260702-3',...QUESTION_IMAGES,...LISTENING_IMAGES];
 
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
