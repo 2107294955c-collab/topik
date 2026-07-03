@@ -56,6 +56,17 @@ assert.equal(window.TopikListeningBank.filter(question => question.transcript).l
 assert.equal(window.TopikListeningBank.reduce((sum, question) => sum + question.optionImages.length, 0), 144);
 assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_47_listening_01').correctAnswer, 'B');
 
+// Persist only mutable progress while bundled content is reconstructed on load.
+assert.equal(Store.save(fresh).ok, true);
+const compactFresh = JSON.parse(values.get(Store.KEY));
+assert.equal(compactFresh.storageFormat, 2);
+assert.equal(compactFresh.words.length, 0);
+assert.equal(compactFresh.grammar.length, 0);
+assert.equal(compactFresh.questionBank.length, 0);
+assert.ok(values.get(Store.KEY).length < 10000);
+assert.equal(Store.load().data.words.length, 4069);
+assert.equal(Store.load().data.questionBank.length, 1206);
+
 // Preserve learning progress and custom content while bundled content is upgraded.
 const learned = fresh.words[0];
 learned.mastered = true;
@@ -87,6 +98,8 @@ assert.equal(migrated.questionBank.length, 1206);
 assert.deepEqual(migrated.questionBookmarks, ['topik_83_reading_01']);
 assert.equal(migrated.contentVersion, 7);
 assert.deepEqual(migrated.studyProfile, fresh.studyProfile);
+assert.equal(JSON.parse(values.get(Store.KEY)).storageFormat, 2);
+assert.ok(values.get(Store.KEY).length < 20000);
 
 const normalizedSession = Store.normalize({
   ...Store.fresh(),
@@ -123,5 +136,19 @@ const oldDataWithoutProfile = {...migrated};
 delete oldDataWithoutProfile.studyProfile;
 assert.deepEqual(Store.merge(migrated, oldDataWithoutProfile).studyProfile, migrated.studyProfile);
 assert.deepEqual(Store.merge({...migrated, questionBookmarks: ['q1']}, {...oldDataWithoutProfile, questionBookmarks: ['q2']}).questionBookmarks, ['q1', 'q2']);
+
+// Deletions, edited bundled content and learning progress survive compact reloads.
+const compactRoundTrip = Store.fresh();
+const deletedWordId = compactRoundTrip.words[0].id;
+compactRoundTrip.words.shift();
+compactRoundTrip.words[0].reviewCount = 9;
+compactRoundTrip.words[0].lastResult = 'good';
+compactRoundTrip.words[1].chinese = '自定义释义';
+compactRoundTrip.words[1].userEdited = true;
+assert.equal(Store.save(compactRoundTrip).ok, true);
+const restoredCompact = Store.load().data;
+assert.equal(restoredCompact.words.some(word => word.id === deletedWordId), false);
+assert.equal(restoredCompact.words[0].reviewCount, 9);
+assert.equal(restoredCompact.words.find(word => word.id === compactRoundTrip.words[1].id).chinese, '自定义释义');
 
 console.log('TOPIK web data tests passed.');

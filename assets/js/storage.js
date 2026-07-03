@@ -11,6 +11,28 @@
   const isoOrNull=value=>{if(!value)return null;const date=new Date(value);return Number.isNaN(date.getTime())?null:date.toISOString()};
   const newId=prefix=>`${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
   const uniqueBy=(items,key='id')=>{const map=new Map();items.forEach(item=>map.set(item[key],item));return [...map.values()]};
+  const STORAGE_FORMAT=2;
+  const wordProgressFields=['mastered','reviewCount','lastReviewedAt','nextReviewAt','wrongCount','lastWrongAt','learningState','successStreak','easeFactor','intervalDays','lastResult'];
+  const grammarProgressFields=['reviewed','reviewCount','lastReviewedAt'];
+  const hasWordProgress=item=>item.mastered||item.reviewCount||item.lastReviewedAt||item.nextReviewAt||item.wrongCount||item.lastWrongAt||item.learningState!=='new'||item.successStreak||item.easeFactor!==2.5||item.intervalDays||item.lastResult;
+  const hasGrammarProgress=item=>item.reviewed||item.reviewCount||item.lastReviewedAt;
+  const progressEntry=(item,fields)=>Object.fromEntries([['id',item.id],...fields.map(field=>[field,item[field]])]);
+
+  function compactForStorage(data){
+    const source=dataSource(),baseWordIds=new Set(source.words.map(item=>item.id)),baseGrammarIds=new Set(source.grammar.map(item=>item.id)),baseQuestionIds=new Set(source.questions.map(item=>item.id));
+    const currentWordIds=new Set(data.words.map(item=>item.id)),currentGrammarIds=new Set(data.grammar.map(item=>item.id)),currentQuestionIds=new Set(data.questionBank.map(item=>item.id));
+    return {...data,storageFormat:STORAGE_FORMAT,
+      words:data.words.filter(item=>!baseWordIds.has(item.id)||item.userEdited),wordProgress:data.words.filter(item=>baseWordIds.has(item.id)&&!item.userEdited&&hasWordProgress(item)).map(item=>progressEntry(item,wordProgressFields)),deletedWordIds:source.words.filter(item=>!currentWordIds.has(item.id)).map(item=>item.id),
+      grammar:data.grammar.filter(item=>!baseGrammarIds.has(item.id)||item.userEdited),grammarProgress:data.grammar.filter(item=>baseGrammarIds.has(item.id)&&!item.userEdited&&hasGrammarProgress(item)).map(item=>progressEntry(item,grammarProgressFields)),deletedGrammarIds:source.grammar.filter(item=>!currentGrammarIds.has(item.id)).map(item=>item.id),
+      questionBank:data.questionBank.filter(item=>!baseQuestionIds.has(item.id)||item.userEdited),deletedQuestionIds:source.questions.filter(item=>!currentQuestionIds.has(item.id)).map(item=>item.id)};
+  }
+
+  function expandStored(source){
+    if(!isObject(source)||source.storageFormat!==STORAGE_FORMAT)return source;
+    const bundled=dataSource(),deletedWords=new Set(Array.isArray(source.deletedWordIds)?source.deletedWordIds:[]),deletedGrammar=new Set(Array.isArray(source.deletedGrammarIds)?source.deletedGrammarIds:[]),deletedQuestions=new Set(Array.isArray(source.deletedQuestionIds)?source.deletedQuestionIds:[]),wordProgress=new Map((Array.isArray(source.wordProgress)?source.wordProgress:[]).filter(isObject).map(item=>[item.id,item])),grammarProgress=new Map((Array.isArray(source.grammarProgress)?source.grammarProgress:[]).filter(isObject).map(item=>[item.id,item]));
+    const mergeItems=(base,stored,deleted,progress=new Map())=>{const storedMap=new Map((Array.isArray(stored)?stored:[]).filter(isObject).map(item=>[item.id,item])),baseIds=new Set(base.map(item=>item.id)),items=base.filter(item=>!deleted.has(item.id)).map(item=>storedMap.get(item.id)||{...item,...(progress.get(item.id)||{})});(Array.isArray(stored)?stored:[]).filter(item=>isObject(item)&&!baseIds.has(item.id)).forEach(item=>items.push(item));return items};
+    return {...source,words:mergeItems(bundled.words,source.words,deletedWords,wordProgress),grammar:mergeItems(bundled.grammar,source.grammar,deletedGrammar,grammarProgress),questionBank:mergeItems(bundled.questions,source.questionBank,deletedQuestions)};
+  }
 
   function fresh(){return normalize({schemaVersion:VERSION,contentVersion:CONTENT_VERSION,studyProfile:{targetLevel:'6',examDate:'',dailyWordTarget:10,dailyGrammarTarget:2,dailyQuestionTarget:10},words:dataSource().words.map(x=>({...x})),grammar:dataSource().grammar.map(x=>({...x})),writings:[],daily:{},quizHistory:[],vocabAttempts:[],testRecords:[],activityLog:[],writingDraft:'',questionBank:dataSource().questions.map(x=>({...x,options:[...x.options]})),practiceRecords:[],wrongAnswers:[],questionBookmarks:[],activePractice:null})}
 
@@ -68,10 +90,10 @@
   function saveDraft(value){try{localStorage.setItem(DRAFT_KEY,String(value||'').slice(0,50000));return true}catch(error){console.error('TOPIK draft save failed',error);return false}}
 
   function load(){
-    try{const raw=localStorage.getItem(KEY),draft=loadDraft();if(raw===null){const data=fresh();if(draft!==null)data.writingDraft=draft;return {data,warning:''}}const parsed=JSON.parse(raw);if(!isObject(parsed))throw new Error('invalid root');const result=withLatestContent(parsed);if(draft!==null)result.data.writingDraft=draft;if(result.changed)localStorage.setItem(KEY,JSON.stringify(result.data));return {data:result.data,warning:''};}
+    try{const raw=localStorage.getItem(KEY),draft=loadDraft();if(raw===null){const data=fresh();if(draft!==null)data.writingDraft=draft;return {data,warning:''}}const parsed=JSON.parse(raw);if(!isObject(parsed))throw new Error('invalid root');const result=withLatestContent(expandStored(parsed));if(draft!==null)result.data.writingDraft=draft;let warning='';if(result.changed||parsed.storageFormat!==STORAGE_FORMAT){try{localStorage.setItem(KEY,JSON.stringify(compactForStorage(result.data)))}catch(error){console.warn('TOPIK automatic storage compaction failed',error);warning='本地空间接近上限，请先导出 JSON 备份。'}}return {data:result.data,warning};}
     catch(error){console.error('TOPIK storage recovery',error);return {data:fresh(),warning:'本地数据无法读取，已载入安全的初始内容。你可以从 JSON 备份恢复。'};}
   }
-  function save(data){try{const clean=withLatestContent(data).data;localStorage.setItem(KEY,JSON.stringify(clean));saveDraft(clean.writingDraft);return {ok:true,data:clean};}catch(error){console.error('TOPIK save failed',error);return {ok:false,data:normalize(data),error};}}
+  function save(data){try{const clean=withLatestContent(data).data;localStorage.setItem(KEY,JSON.stringify(compactForStorage(clean)));saveDraft(clean.writingDraft);return {ok:true,data:clean};}catch(error){console.error('TOPIK save failed',error);return {ok:false,data:normalize(data),error};}}
   function payload(data){return {app:APP,schemaVersion:VERSION,exportedAt:new Date().toISOString(),data:normalize(data)}}
   function download(data,prefix='topik-study-backup'){const blob=new Blob([JSON.stringify(payload(data),null,2)],{type:'application/json;charset=utf-8'});const link=document.createElement('a');const url=URL.createObjectURL(blob);link.href=url;link.download=`${prefix}-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   function parseBackup(parsed){if(!isObject(parsed))throw new Error('JSON 根节点格式错误');if(parsed.app&&parsed.app!==APP)throw new Error('这不是 TOPIK Study 备份');const candidate=isObject(parsed.data)?parsed.data:parsed;if(!['words','grammar','writings','daily'].some(key=>Object.prototype.hasOwnProperty.call(candidate,key)))throw new Error('没有找到学习数据');const version=Number(parsed.schemaVersion||candidate.schemaVersion||1);if(version>VERSION)throw new Error(`备份版本 v${version} 高于当前网站版本`);return normalize(candidate)}
