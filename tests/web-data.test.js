@@ -18,7 +18,7 @@ require('../assets/js/storage.js');
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
-assert.equal(Store.VERSION, 9);
+assert.equal(Store.VERSION, 10);
 assert.equal(Store.CONTENT_VERSION, 7);
 assert.deepEqual(fresh.studyProfile, {
   targetLevel: '6', examDate: '', dailyWordTarget: 10,
@@ -29,6 +29,7 @@ assert.equal(window.TopikGrammar400.length, 400);
 assert.equal(fresh.grammar.length, 415);
 assert.deepEqual(fresh.grammarAttempts, []);
 assert.deepEqual(fresh.fullMockHistory, []);
+assert.deepEqual(fresh.writingDrafts, {});
 assert.equal(new Set(window.TopikGrammar400.map(point => point.pattern)).size, 400);
 assert.ok(fresh.words.every(word => word.learningState && word.easeFactor >= 1.3));
 
@@ -134,18 +135,23 @@ const normalizedWriting = Store.normalize({...Store.fresh(), writings: [{
   score: 81, maxScore: 50, rubric: {content: 20, structure: 19, language: 21, style: 21},
   revisedText: '수정한 글', summary: '좋습니다.', nextFocus: '문체',
   errors: [{category: '文体', original: '해요', correction: '합니다', explanation: '正式文体'}],
+  fullMockId: 'mock-1',
   date: '2026-07-03T00:00:00.000Z',
-}]}).writings[0];
-assert.equal(normalizedWriting.taskType, '54');
-assert.equal(normalizedWriting.score, 81);
-assert.equal(normalizedWriting.rubric.style, 21);
-assert.equal(normalizedWriting.errors[0].category, '文体');
+}], writingDrafts: {'q54-ai': '별도 초안'}});
+const normalizedWritingRecord = normalizedWriting.writings[0];
+assert.equal(normalizedWritingRecord.taskType, '54');
+assert.equal(normalizedWritingRecord.score, 81);
+assert.equal(normalizedWritingRecord.rubric.style, 21);
+assert.equal(normalizedWritingRecord.errors[0].category, '文体');
+assert.equal(normalizedWritingRecord.fullMockId, 'mock-1');
+assert.equal(normalizedWriting.writingDrafts['q54-ai'], '별도 초안');
 const normalizedMock = Store.normalize({...Store.fresh(), fullMockHistory: [{
   id: 'mock-1', examNumber: '102', listeningScore: 78, writingScore: 65, readingScore: 82,
   startedAt: '2026-07-03T00:00:00.000Z', completedAt: '2026-07-03T03:00:00.000Z',
 }]}).fullMockHistory[0];
 assert.equal(normalizedMock.totalScore, 225);
 assert.equal(normalizedMock.phase, 'completed');
+assert.equal(normalizedMock.writingRemainingSeconds, 3000);
 assert.equal(Store.counts({...Store.fresh(), fullMockHistory: [normalizedMock]}).fullMocks, 1);
 
 const mainBeforeDraft = values.get(Store.KEY);

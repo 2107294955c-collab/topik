@@ -5,9 +5,17 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "orientation": "any",
+  "lang": "zh-CN",
   "background_color": "#fffaf7",
   "theme_color": "#b2436b",
   "icons": [
     {"src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ],
+  "shortcuts": [
+    {"name": "今日学习", "short_name": "今天", "url": "./#today"},
+    {"name": "单词复习", "short_name": "单词", "url": "./#vocabulary"},
+    {"name": "写作练习", "short_name": "写作", "url": "./#writing"},
+    {"name": "历届真题", "short_name": "真题", "url": "./#papers"}
   ]
 }
