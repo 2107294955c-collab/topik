@@ -9,6 +9,20 @@
   ].map((x,i)=>({id:`seed-grammar-${i}`,pattern:x[0],explanation:x[1],examples:x[2],level:'中高级',category:'TOPIK核心',reviewed:false,reviewCount:0,lastReviewedAt:null,userEdited:false}));
   grammar.push(...(window.TopikGrammar400||[]).map(point=>({...point,reviewed:false,reviewCount:0,lastReviewedAt:null,userEdited:false})));
   const prompts=['环境保护需要个人和政府分别做什么？请用韩语写 200～300 字。','온라인 수업的优点和缺点是什么？请表达你的看法。','随着一人家庭增加，社会发生了哪些变化？请提出相应对策。','你认为成功需要具备哪些条件？请结合具体例子说明。','智能手机给生活带来了哪些积极和消极影响？','为了减少一次性用品的使用，个人和社会可以采取哪些行动？','请说明人口老龄化产生的问题，并提出解决方案。','工作与生活的平衡为什么重要？应该如何实现？'];
+  const writingPrompts=[
+    {id:'q51-library',type:'51',title:'图书馆临时闭馆通知',prompt:'도서관 이용자 여러분께 알려 드립니다. 이번 주 토요일에는 내부 공사로 인해 도서관을 이용할 수 없습니다. 책을 반납해야 하는 분은 무인 반납함을 이용해 주시기 바랍니다. 공사가 끝난 후에는 정상적으로 운영할 예정이니 ( ㉠ ). 이용에 불편을 드려 ( ㉡ ).',guide:'请分别补全㉠和㉡，注意通知文体与前后逻辑。',minChars:20,maxChars:100,minutes:5,points:10},
+    {id:'q51-meeting',type:'51',title:'会议时间变更邮件',prompt:'안녕하세요, 기획팀 김민수입니다. 내일 오후 두 시에 진행할 예정이었던 회의가 회사 사정으로 연기되었습니다. 새로운 회의 시간은 금요일 오전 열 시입니다. 참석이 어려운 분은 오늘 안으로 ( ㉠ ). 갑자기 일정을 변경하게 되어 ( ㉡ ).',guide:'补全联系请求与道歉表达，使用正式礼貌体。',minChars:20,maxChars:100,minutes:5,points:10},
+    {id:'q51-lost',type:'51',title:'失物招领',prompt:'어제 학생회관 2층에서 검은색 지갑을 잃어버렸습니다. 지갑 안에는 학생증과 카드가 들어 있습니다. 지갑을 보신 분은 학생회 사무실로 ( ㉠ ). 찾아 주신 분께는 ( ㉡ ).',guide:'补全请求和感谢或酬谢表达。',minChars:20,maxChars:100,minutes:5,points:10},
+    {id:'q52-habit',type:'52',title:'习惯形成',prompt:'새로운 습관을 만드는 데에는 일정한 시간이 필요하다. 처음부터 너무 큰 목표를 세우면 쉽게 지칠 수 있다. 따라서 오래 실천하기 위해서는 ( ㉠ ). 또한 결과가 바로 나타나지 않더라도 ( ㉡ ).',guide:'用书面语补全“小目标”和“持续实践”的逻辑。',minChars:30,maxChars:120,minutes:5,points:10},
+    {id:'q52-media',type:'52',title:'媒体信息判断',prompt:'인터넷에서는 누구나 정보를 만들고 공유할 수 있다. 이로 인해 필요한 정보를 빠르게 얻을 수 있지만 사실이 아닌 내용도 쉽게 퍼진다. 그러므로 정보를 받아들일 때에는 ( ㉠ ). 특히 다른 사람에게 전달하기 전에는 ( ㉡ ).',guide:'补全判断来源与核实信息的表达。',minChars:30,maxChars:120,minutes:5,points:10},
+    {id:'q52-rest',type:'52',title:'休息与效率',prompt:'많은 사람들은 오래 일할수록 더 좋은 결과를 얻을 수 있다고 생각한다. 그러나 적절한 휴식 없이 계속 일하면 집중력이 떨어지고 실수가 늘어난다. 업무 효율을 높이기 위해서는 ( ㉠ ). 즉 휴식은 시간을 낭비하는 것이 아니라 ( ㉡ ).',guide:'补全休息方法与结论，保持说明文逻辑。',minChars:30,maxChars:120,minutes:5,points:10},
+    {id:'q53-transport',type:'53',title:'公共交通满意度调查',prompt:'某市对市民进行“公共交通满意项目”调查。准时性：2019年32%、2025年51%；换乘便利：2019年28%、2025年43%；车内舒适：2019年40%、2025年35%。调查还显示，增加车辆班次是市民最希望改善的项目。请客观说明调查结果及变化。',guide:'写200～300字。描述最高/最低项目、年份变化，并概括改善需求；不要写个人意见。',minChars:200,maxChars:300,minutes:10,points:30},
+    {id:'q53-reading',type:'53',title:'成年人阅读方式变化',prompt:'成年人主要阅读方式调查：纸质书从2018年的62%降至2025年的37%；电子书从24%升至41%；有声书从14%升至22%。选择电子书的主要原因依次为携带方便、购买容易、价格较低。请说明调查结果。',guide:'写200～300字。准确比较数据，使用客观书面语。',minChars:200,maxChars:300,minutes:10,points:30},
+    {id:'q53-work',type:'53',title:'弹性工作制效果',prompt:'实行弹性工作制前后比较：平均通勤时间从72分钟降至49分钟；工作满意度从58分升至76分；同事沟通满意度从74分降至63分。公司调查中，48%员工希望增加定期线下会议。请说明结果与特点。',guide:'写200～300字。呈现积极变化和需要改善的方面。',minChars:200,maxChars:300,minutes:10,points:30},
+    {id:'q54-ai',type:'54',title:'人工智能与人的判断',prompt:'人工智能正在越来越多的领域帮助人们作出决定。请围绕以下内容写作：①人工智能决策的优点是什么？②可能产生哪些问题？③为了合理使用人工智能，个人和社会应做什么？',guide:'写600～700字。需要完整回答三个问题，并使用正式书面语组织引言、论证和结论。',minChars:600,maxChars:700,minutes:30,points:50},
+    {id:'q54-local',type:'54',title:'地方人口减少',prompt:'许多地方城市面临青年人口流失和人口减少。请围绕以下内容写作：①青年离开地方的原因是什么？②这会给地区带来哪些影响？③政府和居民可以采取什么措施？',guide:'写600～700字。分析原因、影响和对策，注意段落衔接。',minChars:600,maxChars:700,minutes:30,points:50},
+    {id:'q54-failure',type:'54',title:'失败经验的价值',prompt:'有人认为失败会妨碍成功，也有人认为失败是成长所必需的经验。请围绕以下内容写作：①人们为什么害怕失败？②失败能带来什么价值？③个人和社会应该如何看待失败？',guide:'写600～700字。提出明确观点，并用理由或例子支持。',minChars:600,maxChars:700,minutes:30,points:50}
+  ];
   const papers=[
     ['35','35届TOPIK II听力&写作.pdf',17],['35','35届TOPIK II阅读.pdf',23],['35','35届答案.pdf',3],['35','35届翻译解析.pdf',17],['36','36届TOPIK II听力写作阅读.pdf',40],['36','36届答案.pdf',3],['36','36届翻译解析.pdf',16],['37','37届TOPIK II听力写作阅读.pdf',40],['37','37届答案.pdf',3],['37','37届翻译解析.pdf',14],['41','41届TOPIK II听力写作.pdf',17],['41','41届TOPIK II阅读.pdf',23],['41','41届答案.pdf',4],['41','41届翻译解析.pdf',14],['47','47届TOPIK II试卷.pdf',44],['47','47届TOPIK II答案.pdf',4],['52','52届_TOPIK2_第1卷(B_奇数型)听力写作.pdf',17],['52','52届_TOPIK2_第2卷(B_奇数型)阅读.pdf',23],['52','52届答案速查.pdf',3],['52','52届翻译解析.pdf',14],['60','60届_TOPIK2_第一卷(B-奇数卷)听力写作.pdf',17],['60','60届_TOPIK2_第二卷(B-奇数卷)阅读.pdf',23],['60','60届_TOPIK2_写作答案(B-奇数卷).pdf',2],['60','60届听力标准答案.pdf',1],['60','60届阅读标准答案.pdf',1],['64','TOPIKII64届听力写作.pdf',19],['64','TOPIKII64届阅读文本.pdf',25],['64','64届答案.pdf',3],['83','83届TOPIK II听力写作.pdf',19],['83','83届TOPIK II听力文本.pdf',26],['83','83届TOPIK II阅读.pdf',25],['83','83届TOPIK II答案.pdf',3],['91','91届中高级听力写作.pdf',19],['91','91届中高级听力原文.pdf',26],['91','91届中高级阅读.pdf',25],['91','91届中高级答案表.pdf',3],['96','96届TOPIK II阅读.pdf',25],['96','96届TOPIK II答案.pdf',3],['102','102届TOPIK II阅读.pdf',23],['102','102届TOPIK II阅读答案.pdf',1]
   ];
@@ -22,5 +36,5 @@
   ];
   questions.push(...(window.TopikReadingBank||[]).map(question=>({...question,options:[...question.options]})));
   questions.push(...(window.TopikListeningBank||[]).map(question=>({...question,options:[...question.options],optionImages:[...(question.optionImages||[])]})));
-  window.TopikData={words,grammar,prompts,papers,questions};
+  window.TopikData={words,grammar,prompts,writingPrompts,papers,questions};
 })();

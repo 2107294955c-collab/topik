@@ -18,7 +18,7 @@ require('../assets/js/storage.js');
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
-assert.equal(Store.VERSION, 8);
+assert.equal(Store.VERSION, 9);
 assert.equal(Store.CONTENT_VERSION, 7);
 assert.deepEqual(fresh.studyProfile, {
   targetLevel: '6', examDate: '', dailyWordTarget: 10,
@@ -27,11 +27,15 @@ assert.deepEqual(fresh.studyProfile, {
 assert.equal(fresh.words.length, 4069);
 assert.equal(window.TopikGrammar400.length, 400);
 assert.equal(fresh.grammar.length, 415);
+assert.deepEqual(fresh.grammarAttempts, []);
+assert.deepEqual(fresh.fullMockHistory, []);
 assert.equal(new Set(window.TopikGrammar400.map(point => point.pattern)).size, 400);
 assert.ok(fresh.words.every(word => word.learningState && word.easeFactor >= 1.3));
 
 assert.equal(window.TopikReadingBank.length, 600);
 assert.equal(window.TopikListeningBank.length, 600);
+assert.equal(window.TopikData.writingPrompts.length, 12);
+assert.deepEqual([...new Set(window.TopikData.writingPrompts.map(prompt => prompt.type))], ['51', '52', '53', '54']);
 assert.equal(fresh.questionBank.length, 1206);
 assert.deepEqual(fresh.questionBookmarks, []);
 assert.equal(window.TopikData.papers.length, 40);
@@ -107,7 +111,7 @@ const normalizedSession = Store.normalize({
     id: 'record-1', examNumber: '96', section: 'reading', mode: 'exam', scope: 'category', category: '中心主旨',
     totalQuestions: 50, correctAnswers: 40, unanswered: 2, score: 80,
     durationSeconds: 3000, questionIds: ['q1', 'q2'],
-    answers: [{questionId: 'q1', selected: 'B', correct: true}],
+    answers: [{questionId: 'q1', selected: 'B', correct: true, timeSeconds: 47}], questionTimes: {q1: 47},
   }],
   activePractice: {
     id: 'active-1', examNumber: '96', section: 'reading', mode: 'exam', scope: 'wrong',
@@ -122,7 +126,27 @@ assert.equal(normalizedSession.practiceRecords[0].category, '中心主旨');
 assert.equal(normalizedSession.activePractice.remainingSeconds, 0);
 assert.equal(normalizedSession.activePractice.scope, 'wrong');
 assert.deepEqual(normalizedSession.activePractice.flagged, ['q2']);
+assert.equal(normalizedSession.practiceRecords[0].answers[0].timeSeconds, 47);
+assert.equal(normalizedSession.practiceRecords[0].questionTimes.q1, 47);
 assert.deepEqual(Store.normalize({...Store.fresh(), questionBookmarks: ['q1', 'q1', '', 'q2']}).questionBookmarks, ['q1', 'q2']);
+const normalizedWriting = Store.normalize({...Store.fresh(), writings: [{
+  id: 'writing-scored', taskType: '54', promptId: 'q54-ai', promptTitle: 'AI', prompt: 'prompt', text: '한국어 글',
+  score: 81, maxScore: 50, rubric: {content: 20, structure: 19, language: 21, style: 21},
+  revisedText: '수정한 글', summary: '좋습니다.', nextFocus: '문체',
+  errors: [{category: '文体', original: '해요', correction: '합니다', explanation: '正式文体'}],
+  date: '2026-07-03T00:00:00.000Z',
+}]}).writings[0];
+assert.equal(normalizedWriting.taskType, '54');
+assert.equal(normalizedWriting.score, 81);
+assert.equal(normalizedWriting.rubric.style, 21);
+assert.equal(normalizedWriting.errors[0].category, '文体');
+const normalizedMock = Store.normalize({...Store.fresh(), fullMockHistory: [{
+  id: 'mock-1', examNumber: '102', listeningScore: 78, writingScore: 65, readingScore: 82,
+  startedAt: '2026-07-03T00:00:00.000Z', completedAt: '2026-07-03T03:00:00.000Z',
+}]}).fullMockHistory[0];
+assert.equal(normalizedMock.totalScore, 225);
+assert.equal(normalizedMock.phase, 'completed');
+assert.equal(Store.counts({...Store.fresh(), fullMockHistory: [normalizedMock]}).fullMocks, 1);
 
 const mainBeforeDraft = values.get(Store.KEY);
 assert.equal(Store.saveDraft('new draft'), true);
