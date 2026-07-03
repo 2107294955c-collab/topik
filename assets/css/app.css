@@ -70,4 +70,5 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .smart-recommendation{border-color:#f0d2de;background:linear-gradient(135deg,#fff,#fff0f6)}
 .day-bar i{background:linear-gradient(#dc91a8,var(--primary))}.bottom-nav{background:rgba(255,252,249,.96)}
 .install-guide{display:flex;align-items:center;gap:14px;margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface-2)}.install-guide .brand-mark{flex:0 0 auto}.install-guide p{margin:0;line-height:1.75}.today-header-actions .text-button{white-space:nowrap}
+.backup-health{display:inline-flex;margin:6px 0 8px;padding:6px 10px;border-radius:999px;background:#eaf7ef;color:#287a4d;font-size:12px;font-weight:800}.backup-health.warning{background:#fff1e7;color:#a44d2b}
 .listening-device-note{background:#fff0f6;border-color:#efcddc;color:#88405c}
