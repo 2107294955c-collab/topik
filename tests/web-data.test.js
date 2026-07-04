@@ -18,7 +18,7 @@ require('../assets/js/storage.js');
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
 
-assert.equal(Store.VERSION, 11);
+assert.equal(Store.VERSION, 12);
 assert.equal(Store.CONTENT_VERSION, 7);
 assert.deepEqual(fresh.studyProfile, {
   targetLevel: '6', examDate: '', dailyWordTarget: 10,
@@ -131,8 +131,10 @@ assert.deepEqual(normalizedSession.activePractice.flagged, ['q2']);
 assert.equal(normalizedSession.practiceRecords[0].answers[0].timeSeconds, 47);
 assert.equal(normalizedSession.practiceRecords[0].questionTimes.q1, 47);
 assert.deepEqual(Store.normalize({...Store.fresh(), questionBookmarks: ['q1', 'q1', '', 'q2']}).questionBookmarks, ['q1', 'q2']);
-const normalizedWrong = Store.normalize({...Store.fresh(), wrongAnswers: [{questionId: 'q1', wrongCount: 3, correctStreak: 1, nextReviewAt: '2026-07-04T00:00:00.000Z', lastReviewedAt: '2026-07-03T00:00:00.000Z'}]}).wrongAnswers[0];
+const normalizedWrong = Store.normalize({...Store.fresh(), wrongAnswers: [{questionId: 'q1', wrongCount: 3, correctStreak: 1, reason: 'grammar', note: '连接关系判断错误', nextReviewAt: '2026-07-04T00:00:00.000Z', lastReviewedAt: '2026-07-03T00:00:00.000Z'}]}).wrongAnswers[0];
 assert.equal(normalizedWrong.correctStreak, 1);
+assert.equal(normalizedWrong.reason, 'grammar');
+assert.equal(normalizedWrong.note, '连接关系判断错误');
 assert.equal(normalizedWrong.nextReviewAt, '2026-07-04T00:00:00.000Z');
 assert.equal(Store.normalize({...Store.fresh(), lastBackupAt: '2026-07-03T01:02:03.000Z'}).lastBackupAt, '2026-07-03T01:02:03.000Z');
 const normalizedWriting = Store.normalize({...Store.fresh(), writings: [{
