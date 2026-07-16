@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#b2436b">
-  <meta name="topik-version" content="20260715-1">
+  <meta name="topik-version" content="20260716-1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="TOPIK Study">
   <meta name="description" content="本地优先的个人 TOPIK 5–6 级学习工具">
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest?v=20260715-1">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260715-1">
-  <script defer src="assets/js/vocab-batch1.js?v=20260715-1"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260715-1"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260715-1"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260715-1"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260715-1"></script>
-  <script defer src="assets/js/data.js?v=20260715-1"></script>
-  <script defer src="assets/js/storage.js?v=20260715-1"></script>
-  <script defer src="assets/js/app.js?v=20260715-1"></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20260716-1">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260716-1">
+  <script defer src="assets/js/vocab-batch1.js?v=20260716-1"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260716-1"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260716-1"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260716-1"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260716-1"></script>
+  <script defer src="assets/js/data.js?v=20260716-1"></script>
+  <script defer src="assets/js/storage.js?v=20260716-1"></script>
+  <script defer src="assets/js/app.js?v=20260716-1"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -164,7 +164,7 @@
         <section class="card pace-panel"><div class="section-heading"><div><span class="eyebrow">WRITING MAP</span><h2>写作题型能力</h2><p class="muted">分别统计 51–54 题 AI 评分，优先练习平均分最低的题型。</p></div></div><div id="writingProgressMap" class="pace-grid"></div></section>
         <section class="card weakness-panel"><div class="section-heading"><div><span class="eyebrow">WEAKNESS ANALYSIS</span><h2>阅读薄弱题型</h2><p class="muted">根据在线练习记录自动统计，点击即可开始专项训练。</p></div></div><div id="weaknessAnalysis" class="weakness-grid"></div></section>
         <section class="card pace-panel"><div class="section-heading"><div><span class="eyebrow">ERROR CAUSES</span><h2>错题原因分析</h2><p class="muted">在错题本标记原因后，这里会显示最需要处理的问题。</p></div></div><div id="wrongCauseAnalysis" class="pace-grid"></div></section>
-        <section class="card backup-panel"><div><span class="eyebrow">LOCAL DATA</span><h2>数据与备份</h2><p id="backupHealth" class="backup-health"></p><p id="backupMeta" class="muted"></p></div><div class="backup-actions"><button class="primary" id="exportButton">导出全部数据</button><button class="secondary" id="importButton">导入备份</button><input id="importFile" type="file" accept="application/json,.json" hidden></div><p class="notice">建议至少每 7 天导出一次。备份包含全部学习记录，不包含 API Key 或 PDF 文件。</p></section>
+        <section class="card backup-panel"><div><span class="eyebrow">LOCAL DATA</span><h2>数据与备份</h2><p id="backupHealth" class="backup-health"></p><p id="backupMeta" class="muted"></p><p id="appVersionMeta" class="version-meta"></p></div><div class="backup-actions"><button class="primary" id="exportButton">导出全部数据</button><button class="secondary" id="importButton">导入备份</button><button class="secondary" id="checkUpdateButton" type="button">检查更新</button><input id="importFile" type="file" accept="application/json,.json" hidden></div><p class="notice">建议至少每 7 天导出一次。备份包含全部学习记录，不包含 API Key 或 PDF 文件。</p></section>
       </section>
     </main>
   </div>

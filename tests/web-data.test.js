@@ -67,10 +67,12 @@ assert.equal(window.TopikListeningBank.reduce((sum, question) => sum + question.
 assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_47_listening_01').correctAnswer, 'B');
 assert.ok(indexHtml.includes('id="dailySprint"'));
 assert.ok(indexHtml.includes('id="readinessPanel"'));
-assert.ok(indexHtml.includes('20260715-1'));
+assert.ok(indexHtml.includes('20260716-1'));
 assert.ok(indexHtml.includes('topik-version'));
 assert.ok(indexHtml.includes('updateBanner'));
-assert.equal(version.version, '20260715-1');
+assert.ok(indexHtml.includes('checkUpdateButton'));
+assert.ok(indexHtml.includes('appVersionMeta'));
+assert.equal(version.version, '20260716-1');
 assert.equal(manifest.description, '本地优先的个人 TOPIK 5–6 级学习工具');
 assert.equal(manifest.shortcuts[0].name, '今日学习');
 assert.ok(indexHtml.includes('practiceInlineWrongMeta'));
