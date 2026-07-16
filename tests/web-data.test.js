@@ -1,4 +1,5 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 
 global.window = {};
 const values = new Map();
@@ -17,6 +18,7 @@ require('../assets/js/storage.js');
 
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
+const indexHtml = fs.readFileSync('index.html', 'utf8');
 
 assert.equal(Store.VERSION, 12);
 assert.equal(Store.CONTENT_VERSION, 7);
@@ -61,6 +63,9 @@ assert.equal(window.TopikReadingBank.find(question => question.id === 'topik_102
 assert.equal(window.TopikListeningBank.filter(question => question.transcript).length, 420);
 assert.equal(window.TopikListeningBank.reduce((sum, question) => sum + question.optionImages.length, 0), 144);
 assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_47_listening_01').correctAnswer, 'B');
+assert.ok(indexHtml.includes('id="dailySprint"'));
+assert.ok(indexHtml.includes('id="readinessPanel"'));
+assert.ok(indexHtml.includes('20260705-1'));
 
 // Persist only mutable progress while bundled content is reconstructed on load.
 assert.equal(Store.save(fresh).ok, true);
