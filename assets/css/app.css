@@ -28,6 +28,20 @@ dialog{border:0;border-radius:22px;padding:0;width:min(560px,calc(100vw - 26px))
 @media(max-width:899px){.page{scroll-margin-top:68px}}
 @media(max-width:599px){.vocab-week-card{display:none}.rating-actions{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:420px){.task-card{gap:9px}.task-start{padding-inline:8px}}
+.coach-panel{padding:19px;margin-top:14px;background:linear-gradient(135deg,#fffdfb,#fff3f8)}
+.coach-panel .section-heading strong{color:var(--primary-dark)}
+.coach-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.coach-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:17px;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.015)}
+.coach-card.priority{border-color:#e8a9bb;background:linear-gradient(135deg,#fff,#fff0f6);box-shadow:0 10px 25px rgba(178,67,107,.08)}
+.coach-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:14px;background:var(--primary-soft);color:var(--primary-dark);font-weight:900}
+.coach-copy{min-width:0}
+.coach-copy span,.coach-copy strong,.coach-copy small{display:block}
+.coach-copy span{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.03em}
+.coach-copy strong{margin-top:2px;overflow-wrap:anywhere}
+.coach-copy small{margin-top:3px;color:var(--muted);line-height:1.35}
+.coach-card button{white-space:nowrap}
+@media(min-width:1050px){.coach-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:699px){.coach-grid{grid-template-columns:1fr}.coach-card{grid-template-columns:auto minmax(0,1fr);align-items:start}.coach-card button{grid-column:1/-1;width:100%}}
 .writing-save{width:100%;margin-top:12px}.bank-actions{display:flex;align-items:center;gap:8px}@media(max-width:420px){.bank-actions{width:100%}.bank-actions .secondary{flex:1}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 .setup-heading,.mock-topbar,.navigator-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.setup-heading h2{margin:4px 0}.source-chip{display:inline-grid;place-items:center;min-width:68px;height:38px;border-radius:19px;background:var(--primary-soft);color:var(--primary-dark);font-weight:800}.source-note{margin:15px 0;padding:12px 14px;border-radius:13px;background:#fff8e7;color:#765016;font-size:13px}.practice-mode-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.mode-choice{display:flex!important;grid-template-columns:none!important;flex-direction:row!important;align-items:flex-start;gap:10px!important;padding:15px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--text)!important;cursor:pointer}.mode-choice:has(input:checked){border-color:var(--primary);background:#f3f5ff;box-shadow:0 0 0 2px rgba(79,99,184,.09)}.mode-choice input{margin-top:4px;accent-color:var(--primary)}.mode-choice strong,.mode-choice small{display:block}.mode-choice small{margin-top:3px;color:var(--muted)}
 .setup-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.full-mock-stages{display:grid;gap:9px;margin:15px 0}.full-mock-stages article{display:grid;grid-template-columns:auto 1fr 86px auto;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}.full-mock-stages article>span{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--primary-soft);color:var(--primary-dark);font-weight:800}.full-mock-stages strong,.full-mock-stages small{display:block}.full-mock-stages small{color:var(--muted)}.full-mock-stages input{width:86px;border:1px solid var(--line);border-radius:10px;padding:9px}.full-mock-total{display:grid;grid-template-columns:1fr auto;align-items:center;padding:15px;border-radius:15px;background:var(--primary-soft)}.full-mock-total span,.full-mock-total small{color:var(--muted)}.full-mock-total strong{font-size:25px;color:var(--primary-dark)}.full-mock-total small{grid-column:1/-1}
