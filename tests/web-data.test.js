@@ -68,14 +68,15 @@ assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_4
 assert.ok(indexHtml.includes('id="dailySprint"'));
 assert.ok(indexHtml.includes('id="readinessPanel"'));
 assert.ok(indexHtml.includes('id="learningCoach"'));
-assert.ok(indexHtml.includes('20260716-5'));
+assert.ok(indexHtml.includes('id="practiceCoverageGrid"'));
+assert.ok(indexHtml.includes('20260716-6'));
 assert.ok(indexHtml.includes('topik-version'));
 assert.ok(indexHtml.includes('updateBanner'));
 assert.ok(indexHtml.includes('checkUpdateButton'));
 assert.ok(indexHtml.includes('appVersionMeta'));
 assert.ok(indexHtml.includes('storageEstimateMeta'));
 assert.ok(indexHtml.includes('preserveStorageButton'));
-assert.equal(version.version, '20260716-5');
+assert.equal(version.version, '20260716-6');
 assert.equal(manifest.description, '本地优先的个人 TOPIK 5–6 级学习工具');
 assert.equal(manifest.shortcuts[0].name, '今日学习');
 assert.ok(indexHtml.includes('practiceInlineWrongMeta'));

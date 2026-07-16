@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#b2436b">
-  <meta name="topik-version" content="20260716-5">
+  <meta name="topik-version" content="20260716-6">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="TOPIK Study">
   <meta name="description" content="本地优先的个人 TOPIK 5–6 级学习工具">
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest?v=20260716-5">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260716-5">
-  <script defer src="assets/js/vocab-batch1.js?v=20260716-5"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260716-5"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260716-5"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260716-5"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260716-5"></script>
-  <script defer src="assets/js/data.js?v=20260716-5"></script>
-  <script defer src="assets/js/storage.js?v=20260716-5"></script>
-  <script defer src="assets/js/app.js?v=20260716-5"></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20260716-6">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260716-6">
+  <script defer src="assets/js/vocab-batch1.js?v=20260716-6"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260716-6"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260716-6"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260716-6"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260716-6"></script>
+  <script defer src="assets/js/data.js?v=20260716-6"></script>
+  <script defer src="assets/js/storage.js?v=20260716-6"></script>
+  <script defer src="assets/js/app.js?v=20260716-6"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -115,6 +115,7 @@
           <div id="paperList"></div>
         </div>
         <div id="paperPracticeView" class="paper-mode-view">
+          <section class="card practice-coverage-panel"><div class="section-heading"><div><span class="eyebrow">ONLINE COVERAGE</span><h2>真题在线覆盖表</h2><p class="muted">快速查看每届阅读/听力题库、PDF 资料和最近练习表现。</p></div><strong id="practiceCoverageSummary"></strong></div><div id="practiceCoverageGrid" class="practice-coverage-grid"></div></section>
           <section id="practiceSetup" class="card practice-setup">
             <div class="setup-heading"><div><span class="eyebrow">REAL TOPIK PRACTICE</span><h2>真题在线练习</h2><p>已收录 12 届 TOPIK II 阅读与听力，共 1,200 题；听力可配合另一台设备播放录音。</p></div><div class="setup-actions"><span class="source-chip">1,200 题</span><button class="secondary" id="openFullMockButton">300 分全科模考</button></div></div>
             <div class="source-note">收录第 35、36、37、41、47、52、60、64、83、91、96、102 届。第 96 届 42～43 题、第 102 届 23～24 与 42～43 题因原文未完整公开，已明确标记为“模拟补全文”；其余 594 题标记为公开真题。</div>
