@@ -11,15 +11,15 @@
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260704-1">
-  <script defer src="assets/js/vocab-batch1.js?v=20260704-1"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260704-1"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260704-1"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260704-1"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260704-1"></script>
-  <script defer src="assets/js/data.js?v=20260704-1"></script>
-  <script defer src="assets/js/storage.js?v=20260704-1"></script>
-  <script defer src="assets/js/app.js?v=20260704-1"></script>
+  <link rel="stylesheet" href="assets/css/app.css?v=20260705-1">
+  <script defer src="assets/js/vocab-batch1.js?v=20260705-1"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260705-1"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260705-1"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260705-1"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260705-1"></script>
+  <script defer src="assets/js/data.js?v=20260705-1"></script>
+  <script defer src="assets/js/storage.js?v=20260705-1"></script>
+  <script defer src="assets/js/app.js?v=20260705-1"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -46,6 +46,10 @@
           <div class="progress-ring" id="todayRing"><span>0%</span></div>
         </section>
         <section id="smartRecommendation" class="smart-recommendation"></section>
+        <section class="daily-sprint-panel" aria-labelledby="dailySprintTitle">
+          <div class="section-heading"><div><span class="eyebrow">ADAPTIVE SPRINT</span><h2 id="dailySprintTitle">今日冲刺队列</h2><p class="muted">自动把最该处理的单词、语法、错题和薄弱题型排好。</p></div></div>
+          <div id="dailySprint" class="daily-sprint-grid"></div>
+        </section>
         <section class="anniversary-section" aria-labelledby="anniversaryTitle"><div class="section-heading"><div><span class="eyebrow">SPECIAL DAYS</span><h2 id="anniversaryTitle">纪念日倒计时</h2></div><span class="anniversary-heart">♥</span></div><div id="anniversaryCountdown" class="anniversary-grid"></div></section>
         <div id="taskList" class="task-grid"></div>
         <section class="section-block"><div class="section-heading"><div><span class="eyebrow">QUICK VIEW</span><h2>学习概览</h2></div></div><div id="todayStats" class="stats-grid compact"></div></section>
@@ -152,6 +156,7 @@
           <section class="card"><div class="section-heading"><div><span class="eyebrow">LAST 7 DAYS</span><h2>本周学习</h2></div><strong id="weeklyTotal"></strong></div><div id="weeklyChart" class="weekly-chart"></div><div id="weeklyLegend" class="weekly-legend"></div></section>
           <section class="card"><div class="section-heading"><div><span class="eyebrow">TEST HISTORY</span><h2>真题成绩</h2></div></div><div id="scoreHistory" class="score-history"></div></section>
         </div>
+        <section class="card readiness-panel"><div class="section-heading"><div><span class="eyebrow">TOPIK 5–6 RADAR</span><h2>备考准备度</h2><p class="muted">综合词汇、语法、真题、写作和错题压力，自动给出下一步。</p></div></div><div id="readinessPanel" class="readiness-grid"></div></section>
         <section class="card srs-panel"><div class="section-heading"><div><span class="eyebrow">MEMORY REVIEW</span><h2>记忆复习状态</h2></div></div><div id="srsSummary" class="srs-summary"></div></section>
         <section class="card pace-panel"><div class="section-heading"><div><span class="eyebrow">PACE ANALYSIS</span><h2>答题速度分析</h2><p class="muted">区分“不会做”和“会做但太慢”，每题最多记录 5 分钟有效用时。</p></div></div><div id="paceAnalysis" class="pace-grid"></div></section>
         <section class="card pace-panel"><div class="section-heading"><div><span class="eyebrow">WRITING MAP</span><h2>写作题型能力</h2><p class="muted">分别统计 51–54 题 AI 评分，优先练习平均分最低的题型。</p></div></div><div id="writingProgressMap" class="pace-grid"></div></section>
