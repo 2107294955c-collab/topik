@@ -19,6 +19,8 @@ require('../assets/js/storage.js');
 const Store = window.TopikStorage;
 const fresh = Store.fresh();
 const indexHtml = fs.readFileSync('index.html', 'utf8');
+const manifest = JSON.parse(fs.readFileSync('manifest.webmanifest', 'utf8'));
+const version = JSON.parse(fs.readFileSync('version.json', 'utf8'));
 
 assert.equal(Store.VERSION, 12);
 assert.equal(Store.CONTENT_VERSION, 7);
@@ -65,7 +67,12 @@ assert.equal(window.TopikListeningBank.reduce((sum, question) => sum + question.
 assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_47_listening_01').correctAnswer, 'B');
 assert.ok(indexHtml.includes('id="dailySprint"'));
 assert.ok(indexHtml.includes('id="readinessPanel"'));
-assert.ok(indexHtml.includes('20260714-1'));
+assert.ok(indexHtml.includes('20260715-1'));
+assert.ok(indexHtml.includes('topik-version'));
+assert.ok(indexHtml.includes('updateBanner'));
+assert.equal(version.version, '20260715-1');
+assert.equal(manifest.description, '本地优先的个人 TOPIK 5–6 级学习工具');
+assert.equal(manifest.shortcuts[0].name, '今日学习');
 assert.ok(indexHtml.includes('practiceInlineWrongMeta'));
 assert.ok(indexHtml.includes('wrongReasonFilter'));
 assert.ok(indexHtml.includes('activityHeatmap'));

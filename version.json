@@ -1,0 +1,9 @@
+{
+  "version": "20260715-1",
+  "updatedAt": "2026-07-16T00:00:00+09:00",
+  "notes": [
+    "GitHub Actions 自动部署",
+    "网站内新版检测与刷新提示",
+    "PWA Manifest 中文信息修正"
+  ]
+}
