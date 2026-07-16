@@ -11,15 +11,15 @@
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260710-1">
-  <script defer src="assets/js/vocab-batch1.js?v=20260710-1"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260710-1"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260710-1"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260710-1"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260710-1"></script>
-  <script defer src="assets/js/data.js?v=20260710-1"></script>
-  <script defer src="assets/js/storage.js?v=20260710-1"></script>
-  <script defer src="assets/js/app.js?v=20260710-1"></script>
+  <link rel="stylesheet" href="assets/css/app.css?v=20260711-1">
+  <script defer src="assets/js/vocab-batch1.js?v=20260711-1"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260711-1"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260711-1"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260711-1"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260711-1"></script>
+  <script defer src="assets/js/data.js?v=20260711-1"></script>
+  <script defer src="assets/js/storage.js?v=20260711-1"></script>
+  <script defer src="assets/js/app.js?v=20260711-1"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -68,7 +68,7 @@
         </div>
         <div id="vocabStudyControls" class="study-scope" hidden><label>复习范围<select id="vocabReviewScope"><option value="unmastered">未掌握单词</option><option value="wrong">错词</option><option value="today">今日计划</option><option value="random">随机复习</option><option value="all">全部单词</option></select></label><span id="scopeWordCount"></span></div>
         <div id="vocabListView" class="mode-view active">
-          <div class="toolbar"><label class="search-field"><span>⌕</span><input id="wordSearch" placeholder="搜索韩语、中文、分类或例句"></label><select id="wordFilter" aria-label="筛选单词"><option value="all">全部单词</option><option value="due">今日到期</option><option value="learning">学习中</option><option value="mastered">已掌握</option><option value="wrong">错词</option><option value="testable">可测验</option><option value="pending">释义待补充</option><option value="no-example">缺少例句</option></select><select id="wordCategoryFilter" aria-label="按主题分类筛选"><option value="all">全部分类</option></select><select id="wordLevelFilter" aria-label="按 TOPIK 等级筛选"><option value="all">全部等级</option></select></div>
+          <div class="toolbar"><label class="search-field"><span>⌕</span><input id="wordSearch" placeholder="搜索韩语、中文、分类或例句"></label><select id="wordFilter" aria-label="筛选单词"><option value="all">全部单词</option><option value="due">今日到期</option><option value="learning">学习中</option><option value="mastered">已掌握</option><option value="wrong">错词</option><option value="testable">可测验</option><option value="pending">释义待补充</option><option value="no-example">缺少例句</option></select><select id="wordCategoryFilter" aria-label="按主题分类筛选"><option value="all">全部分类</option></select><select id="wordLevelFilter" aria-label="按 TOPIK 等级筛选"><option value="all">全部等级</option></select><button class="secondary compact" id="resetWordFilters" type="button">重置筛选</button></div>
           <div id="wordList" class="content-grid"></div>
           <button id="wordLoadMore" class="secondary load-more" hidden>加载更多</button>
         </div>
