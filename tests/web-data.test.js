@@ -65,7 +65,7 @@ assert.equal(window.TopikListeningBank.reduce((sum, question) => sum + question.
 assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_47_listening_01').correctAnswer, 'B');
 assert.ok(indexHtml.includes('id="dailySprint"'));
 assert.ok(indexHtml.includes('id="readinessPanel"'));
-assert.ok(indexHtml.includes('20260713-1'));
+assert.ok(indexHtml.includes('20260714-1'));
 assert.ok(indexHtml.includes('practiceInlineWrongMeta'));
 assert.ok(indexHtml.includes('wrongReasonFilter'));
 assert.ok(indexHtml.includes('activityHeatmap'));
@@ -177,6 +177,35 @@ const mainBeforeDraft = values.get(Store.KEY);
 assert.equal(Store.saveDraft('new draft'), true);
 assert.equal(values.get(Store.KEY), mainBeforeDraft);
 assert.equal(values.get(Store.DRAFT_KEY), 'new draft');
+
+// If the browser rejects the first write, storage retries with slimmed history.
+const originalSetItem = global.localStorage.setItem;
+let failNextMainWrite = true;
+global.localStorage.setItem = (key, value) => {
+  if (key === Store.KEY && failNextMainWrite) {
+    failNextMainWrite = false;
+    throw new Error('quota');
+  }
+  return originalSetItem(key, value);
+};
+const pressureData = Store.fresh();
+pressureData.quizHistory = Array.from({length: 800}, (_, index) => ({
+  id: `quiz-pressure-${index}`, direction: 'ko-zh', correct: index % 10, total: 10, date: new Date(2026, 0, 1, 0, index).toISOString(),
+}));
+pressureData.practiceRecords = Array.from({length: 600}, (_, index) => ({
+  id: `practice-pressure-${index}`, examNumber: '96', section: 'reading', mode: 'instant', scope: 'mini',
+  totalQuestions: 150, correctAnswers: 80, unanswered: 0, date: new Date(2026, 0, 1, 0, index).toISOString(),
+  questionIds: Array.from({length: 150}, (__, questionIndex) => `q-${index}-${questionIndex}`),
+  answers: Array.from({length: 150}, (__, questionIndex) => ({questionId: `q-${index}-${questionIndex}`, selected: 'A', correct: questionIndex % 2 === 0, timeSeconds: questionIndex})),
+  questionTimes: Object.fromEntries(Array.from({length: 150}, (__, questionIndex) => [`q-${index}-${questionIndex}`, questionIndex])),
+}));
+const pressureSave = Store.save(pressureData);
+global.localStorage.setItem = originalSetItem;
+assert.equal(pressureSave.ok, true);
+assert.equal(pressureSave.compacted, true);
+assert.equal(pressureSave.data.quizHistory.length, 500);
+assert.equal(pressureSave.data.practiceRecords.length, 500);
+assert.ok(pressureSave.data.practiceRecords.every(record => record.answers.length <= 120));
 
 const oldBackup = Store.parseBackup({app: Store.APP, schemaVersion: 5, data: migrated});
 assert.equal(oldBackup.words.length, 4069);

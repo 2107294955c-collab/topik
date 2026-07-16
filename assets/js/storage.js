@@ -94,16 +94,38 @@
 
   function loadDraft(){try{const value=localStorage.getItem(DRAFT_KEY);return value===null?null:value.slice(0,50000)}catch{return null}}
   function saveDraft(value){try{localStorage.setItem(DRAFT_KEY,String(value||'').slice(0,50000));return true}catch(error){console.error('TOPIK draft save failed',error);return false}}
+  function slimForStorage(data){
+    const clean=normalize(data),take=(items,limit)=>items.length>limit?items.slice(-limit):items;
+    const slimPractice=record=>({...record,answers:take(record.answers||[],120),questionTimes:Object.fromEntries(Object.entries(record.questionTimes||{}).slice(-120))});
+    const slimWriting=record=>({...record,feedback:text(record.feedback,12000),revisedText:text(record.revisedText,12000),summary:text(record.summary,5000),nextFocus:text(record.nextFocus,2000),errors:take(record.errors||[],20)});
+    return normalize({...clean,
+      vocabAttempts:take(clean.vocabAttempts,5000),
+      grammarAttempts:take(clean.grammarAttempts,2000),
+      activityLog:take(clean.activityLog,2000),
+      quizHistory:take(clean.quizHistory,500),
+      practiceRecords:take(clean.practiceRecords,500).map(slimPractice),
+      fullMockHistory:take(clean.fullMockHistory,120),
+      writings:take(clean.writings,250).map(slimWriting),
+    });
+  }
 
   function load(){
     try{const raw=localStorage.getItem(KEY),draft=loadDraft();if(raw===null){const data=fresh();if(draft!==null)data.writingDraft=draft;return {data,warning:''}}const parsed=JSON.parse(raw);if(!isObject(parsed))throw new Error('invalid root');const result=withLatestContent(expandStored(parsed));if(draft!==null)result.data.writingDraft=draft;let warning='';if(result.changed||parsed.storageFormat!==STORAGE_FORMAT){try{localStorage.setItem(KEY,JSON.stringify(compactForStorage(result.data)))}catch(error){console.warn('TOPIK automatic storage compaction failed',error);warning='本地空间接近上限，请先导出 JSON 备份。'}}return {data:result.data,warning};}
     catch(error){console.error('TOPIK storage recovery',error);return {data:fresh(),warning:'本地数据无法读取，已载入安全的初始内容。你可以从 JSON 备份恢复。'};}
   }
-  function save(data){try{const clean=withLatestContent(data).data;localStorage.setItem(KEY,JSON.stringify(compactForStorage(clean)));saveDraft(clean.writingDraft);return {ok:true,data:clean};}catch(error){console.error('TOPIK save failed',error);return {ok:false,data:normalize(data),error};}}
+  function save(data){
+    const clean=withLatestContent(data).data;
+    try{localStorage.setItem(KEY,JSON.stringify(compactForStorage(clean)));saveDraft(clean.writingDraft);return {ok:true,data:clean,compacted:false};}
+    catch(error){
+      console.warn('TOPIK save failed, retrying with slim history',error);
+      try{const slim=slimForStorage(clean);localStorage.setItem(KEY,JSON.stringify(compactForStorage(slim)));saveDraft(slim.writingDraft);return {ok:true,data:slim,compacted:true,error};}
+      catch(secondError){console.error('TOPIK save failed',secondError);return {ok:false,data:normalize(data),error:secondError};}
+    }
+  }
   function payload(data){return {app:APP,schemaVersion:VERSION,exportedAt:new Date().toISOString(),data:normalize(data)}}
   function download(data,prefix='topik-study-backup'){const blob=new Blob([JSON.stringify(payload(data),null,2)],{type:'application/json;charset=utf-8'});const link=document.createElement('a');const url=URL.createObjectURL(blob);link.href=url;link.download=`${prefix}-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   function parseBackup(parsed){if(!isObject(parsed))throw new Error('JSON 根节点格式错误');if(parsed.app&&parsed.app!==APP)throw new Error('这不是 TOPIK Study 备份');const candidate=isObject(parsed.data)?parsed.data:parsed;if(!['words','grammar','writings','daily'].some(key=>Object.prototype.hasOwnProperty.call(candidate,key)))throw new Error('没有找到学习数据');const version=Number(parsed.schemaVersion||candidate.schemaVersion||1);if(version>VERSION)throw new Error(`备份版本 v${version} 高于当前网站版本`);return normalize(candidate)}
   function merge(current,incoming){const a=normalize(current),b=normalize(incoming),daily={...a.daily},mergedProfile=isObject(incoming?.studyProfile)?b.studyProfile:a.studyProfile,lastBackupAt=[a.lastBackupAt,b.lastBackupAt].filter(Boolean).sort().at(-1)||null;Object.entries(b.daily).forEach(([date,values])=>daily[date]=[...new Set([...(daily[date]||[]),...values])]);return normalize({...a,lastBackupAt,studyProfile:mergedProfile,words:uniqueBy([...a.words,...b.words]),grammar:uniqueBy([...a.grammar,...b.grammar]),writings:uniqueBy([...a.writings,...b.writings]),writingDrafts:{...a.writingDrafts,...b.writingDrafts},quizHistory:uniqueBy([...a.quizHistory,...b.quizHistory]),vocabAttempts:uniqueBy([...a.vocabAttempts,...b.vocabAttempts]),grammarAttempts:uniqueBy([...a.grammarAttempts,...b.grammarAttempts]),testRecords:uniqueBy([...a.testRecords,...b.testRecords],'round'),fullMockHistory:uniqueBy([...a.fullMockHistory,...b.fullMockHistory]),activeFullMock:b.activeFullMock||a.activeFullMock,activityLog:uniqueBy([...a.activityLog,...b.activityLog]),questionBank:uniqueBy([...a.questionBank,...b.questionBank]),practiceRecords:uniqueBy([...a.practiceRecords,...b.practiceRecords]),wrongAnswers:uniqueBy([...a.wrongAnswers,...b.wrongAnswers],'questionId'),questionBookmarks:[...new Set([...a.questionBookmarks,...b.questionBookmarks])],activePractice:b.activePractice||a.activePractice,daily,writingDraft:b.writingDraft||a.writingDraft,contentVersion:Math.max(a.contentVersion,b.contentVersion)});}
   function counts(data){const clean=normalize(data);return {words:clean.words.length,grammar:clean.grammar.length,writings:clean.writings.length,quizzes:clean.quizHistory.length,vocabAttempts:clean.vocabAttempts.length,grammarAttempts:clean.grammarAttempts.length,tests:clean.testRecords.length,fullMocks:clean.fullMockHistory.length,questions:clean.questionBank.length,practices:clean.practiceRecords.length,wrong:clean.wrongAnswers.filter(item=>!item.mastered).length,bookmarks:clean.questionBookmarks.length,wrongWords:clean.words.filter(item=>item.wrongCount>0&&!item.mastered).length,days:Object.keys(clean.daily).length}}
-  window.TopikStorage={KEY,DRAFT_KEY,APP,VERSION,CONTENT_VERSION,newId,fresh,normalize,load,save,loadDraft,saveDraft,payload,download,parseBackup,merge,counts};
+  window.TopikStorage={KEY,DRAFT_KEY,APP,VERSION,CONTENT_VERSION,newId,fresh,normalize,load,save,loadDraft,saveDraft,payload,download,parseBackup,merge,counts,slimForStorage};
 })();
