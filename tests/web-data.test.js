@@ -65,9 +65,10 @@ assert.equal(window.TopikListeningBank.reduce((sum, question) => sum + question.
 assert.equal(window.TopikListeningBank.find(question => question.id === 'topik_47_listening_01').correctAnswer, 'B');
 assert.ok(indexHtml.includes('id="dailySprint"'));
 assert.ok(indexHtml.includes('id="readinessPanel"'));
-assert.ok(indexHtml.includes('20260707-1'));
+assert.ok(indexHtml.includes('20260708-1'));
 assert.ok(indexHtml.includes('practiceInlineWrongMeta'));
 assert.ok(indexHtml.includes('wrongReasonFilter'));
+assert.ok(indexHtml.includes('activityHeatmap'));
 
 // Persist only mutable progress while bundled content is reconstructed on load.
 assert.equal(Store.save(fresh).ok, true);
