@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#b2436b">
-  <meta name="topik-version" content="20260716-6">
+  <meta name="topik-version" content="20260819-1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="TOPIK Study">
   <meta name="description" content="本地优先的个人 TOPIK 5–6 级学习工具">
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest?v=20260716-6">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260716-6">
-  <script defer src="assets/js/vocab-batch1.js?v=20260716-6"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260716-6"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260716-6"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260716-6"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260716-6"></script>
-  <script defer src="assets/js/data.js?v=20260716-6"></script>
-  <script defer src="assets/js/storage.js?v=20260716-6"></script>
-  <script defer src="assets/js/app.js?v=20260716-6"></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20260819-1">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260819-1">
+  <script defer src="assets/js/vocab-batch1.js?v=20260819-1"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260819-1"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260819-1"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260819-1"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260819-1"></script>
+  <script defer src="assets/js/data.js?v=20260819-1"></script>
+  <script defer src="assets/js/storage.js?v=20260819-1"></script>
+  <script defer src="assets/js/app.js?v=20260819-1"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -99,9 +99,10 @@
         <header class="page-header"><div><span class="eyebrow">TOPIK WRITING LAB</span><h1 id="writingTitle">写作 51–54 专项</h1><p>按真实题型练习、计时、分项评分并追踪重复错误。</p></div><span id="writingTaskBadge" class="source-chip">第 54 题</span></header>
         <section class="card writing-task-bar"><label>题型<select id="writingTaskType"><option value="51">51 实用文填空</option><option value="52">52 说明文填空</option><option value="53">53 图表说明</option><option value="54" selected>54 议论文</option></select></label><label>练习题<select id="writingPromptSelect"></select></label><div class="writing-timer-controls"><span id="writingTimer" class="timer-chip">30:00</span><button class="secondary" id="writingTimerButton">开始计时</button><button class="text-button" id="writingTimerReset">重置</button></div></section>
         <div class="writing-layout">
-          <div class="writing-main"><label class="field-label" for="writingText">韩语答案</label><textarea id="writingText" class="writing-box" lang="ko" placeholder="在这里输入韩语答案……"></textarea><div class="writing-meta"><span id="writingCount">0 字</span><span id="writingTarget">目标 600～700 字 · 草稿自动保存</span></div><div class="writing-primary-actions"><button id="saveWritingButton" class="secondary">保存本次练习</button><button id="loadLatestRevision" class="text-button" hidden>载入上次修订版</button></div><div class="api-row"><input id="apiKey" type="password" autocomplete="off" placeholder="本次使用的 OpenAI API Key"><button id="correctButton" class="primary">✨ AI 分项评分</button></div><p class="notice">AI 按内容、结构、语言、文体四项评分并用中文解释。API Key 只保留在当前页面，不会写入本地存储或备份。</p></div>
+          <div class="writing-main"><label class="field-label" for="writingText">韩语答案</label><textarea id="writingText" class="writing-box" lang="ko" placeholder="在这里输入韩语答案……"></textarea><div class="writing-meta"><span id="writingCount">0 字</span><span id="writingTarget">目标 600～700 字 · 草稿自动保存</span></div><div class="writing-primary-actions"><button id="saveWritingButton" class="secondary">保存本次练习</button><button id="openEssayGuideButton" class="secondary" type="button">大作文指导</button><button id="loadLatestRevision" class="text-button" hidden>载入上次修订版</button></div><div class="api-row"><input id="apiKey" type="password" autocomplete="off" placeholder="本次使用的 OpenAI API Key"><button id="correctButton" class="primary">✨ AI 分项评分</button></div><p class="notice">AI 按内容、结构、语言、文体四项评分并用中文解释。API Key 只保留在当前页面，不会写入本地存储或备份。</p></div>
           <aside class="prompt-card"><span class="eyebrow">TASK PROMPT</span><h2 id="writingPromptTitle">写作题目</h2><p id="writingPrompt"></p><div id="writingGuide" class="writing-guide"></div><button class="secondary" id="nextPrompt">换一个题目</button></aside>
         </div>
+        <section id="essayGuidePanel" class="card essay-guide-panel" hidden><div class="section-heading"><div><span class="eyebrow">QUESTION 54 COACH</span><h2>大作文写作指导</h2><p class="muted">按审题、结构、表达和检查清单来写 600～700 字议论文。</p></div><button class="primary compact" id="insertEssaySkeleton" type="button">插入大作文骨架</button></div><div id="essayGuideContent" class="essay-guide-content"></div></section>
         <section id="feedback" class="feedback-card" hidden><div class="section-heading"><div><span class="eyebrow">AI EVALUATION</span><h2>TOPIK 分项评分</h2></div><strong id="writingScore" class="writing-score"></strong></div><div id="writingRubric" class="writing-rubric"></div><p id="writingSummary"></p><div id="writingErrorList" class="writing-error-list"></div><div class="revision-panel"><strong>自然修订版</strong><p id="writingRevision" lang="ko"></p></div><p id="writingNextFocus" class="source-note"></p></section>
         <section id="writingErrors" class="section-block"></section>
         <section id="writingHistory" class="section-block"></section>
