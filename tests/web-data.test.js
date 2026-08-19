@@ -70,14 +70,14 @@ assert.ok(indexHtml.includes('id="readinessPanel"'));
 assert.ok(indexHtml.includes('id="learningCoach"'));
 assert.ok(indexHtml.includes('id="practiceCoverageGrid"'));
 assert.ok(indexHtml.includes('id="essayGuidePanel"'));
-assert.ok(indexHtml.includes('20260819-1'));
+assert.ok(indexHtml.includes('20260819-2'));
 assert.ok(indexHtml.includes('topik-version'));
 assert.ok(indexHtml.includes('updateBanner'));
 assert.ok(indexHtml.includes('checkUpdateButton'));
 assert.ok(indexHtml.includes('appVersionMeta'));
 assert.ok(indexHtml.includes('storageEstimateMeta'));
 assert.ok(indexHtml.includes('preserveStorageButton'));
-assert.equal(version.version, '20260819-1');
+assert.equal(version.version, '20260819-2');
 assert.equal(manifest.description, '本地优先的个人 TOPIK 5–6 级学习工具');
 assert.equal(manifest.shortcuts[0].name, '今日学习');
 assert.ok(indexHtml.includes('practiceInlineWrongMeta'));
@@ -87,6 +87,8 @@ assert.ok(indexHtml.includes('wordCategoryFilter'));
 assert.ok(indexHtml.includes('wordLevelFilter'));
 assert.ok(indexHtml.includes('resetWordFilters'));
 assert.ok(indexHtml.includes('resetGrammarFilters'));
+assert.ok(indexHtml.includes('practiceResultInsight'));
+assert.ok(indexHtml.includes('retryWrongFromResult'));
 
 // Persist only mutable progress while bundled content is reconstructed on load.
 assert.equal(Store.save(fresh).ok, true);

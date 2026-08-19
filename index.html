@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#b2436b">
-  <meta name="topik-version" content="20260819-1">
+  <meta name="topik-version" content="20260819-2">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="TOPIK Study">
   <meta name="description" content="本地优先的个人 TOPIK 5–6 级学习工具">
   <title>TOPIK Study</title>
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest?v=20260819-1">
-  <link rel="stylesheet" href="assets/css/app.css?v=20260819-1">
-  <script defer src="assets/js/vocab-batch1.js?v=20260819-1"></script>
-  <script defer src="assets/js/vocab-4000.js?v=20260819-1"></script>
-  <script defer src="assets/js/grammar-400.js?v=20260819-1"></script>
-  <script defer src="assets/js/topik-reading-bank.js?v=20260819-1"></script>
-  <script defer src="assets/js/topik-listening-bank.js?v=20260819-1"></script>
-  <script defer src="assets/js/data.js?v=20260819-1"></script>
-  <script defer src="assets/js/storage.js?v=20260819-1"></script>
-  <script defer src="assets/js/app.js?v=20260819-1"></script>
+  <link rel="manifest" href="manifest.webmanifest?v=20260819-2">
+  <link rel="stylesheet" href="assets/css/app.css?v=20260819-2">
+  <script defer src="assets/js/vocab-batch1.js?v=20260819-2"></script>
+  <script defer src="assets/js/vocab-4000.js?v=20260819-2"></script>
+  <script defer src="assets/js/grammar-400.js?v=20260819-2"></script>
+  <script defer src="assets/js/topik-reading-bank.js?v=20260819-2"></script>
+  <script defer src="assets/js/topik-listening-bank.js?v=20260819-2"></script>
+  <script defer src="assets/js/data.js?v=20260819-2"></script>
+  <script defer src="assets/js/storage.js?v=20260819-2"></script>
+  <script defer src="assets/js/app.js?v=20260819-2"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -145,7 +145,7 @@
               <aside id="practiceNavigatorPanel" class="card question-navigator"><div class="navigator-head"><div><span class="eyebrow">ANSWER SHEET</span><h3>答题卡</h3></div><strong id="practiceAnsweredCount">0 / 50</strong></div><div id="practiceNavigator" class="navigator-grid"></div><div class="navigator-legend"><span><i class="answered"></i>已答</span><span><i class="flagged"></i>标记</span><span><i></i>未答</span></div><button class="primary" id="submitPracticeButton">提交整套答案</button></aside>
             </div>
           </section>
-          <section id="practiceResult" class="card quiz-result" hidden><span class="result-icon">✓</span><h2 id="practiceResultTitle">练习完成</h2><strong id="practiceResultScore"></strong><p id="practiceResultText"></p><div id="practiceResultBreakdown" class="result-breakdown"></div><div class="result-actions"><button class="secondary" id="backToPracticeSetup">返回选择</button><button class="secondary" id="reviewPracticeButton">复盘本套</button><button class="primary" id="repeatPracticeButton">再练一次</button></div></section>
+          <section id="practiceResult" class="card quiz-result" hidden><span class="result-icon">✓</span><h2 id="practiceResultTitle">练习完成</h2><strong id="practiceResultScore"></strong><p id="practiceResultText"></p><div id="practiceResultBreakdown" class="result-breakdown"></div><section id="practiceResultInsight" class="practice-result-insight" aria-live="polite"></section><div class="result-actions"><button class="secondary" id="backToPracticeSetup">返回选择</button><button class="secondary" id="reviewPracticeButton">复盘本套</button><button class="secondary" id="reviewWrongFromResult" hidden>只看错题</button><button class="primary" id="retryWrongFromResult" hidden>重练错题</button><button class="primary" id="repeatPracticeButton">再练一次</button></div></section>
           <section class="section-block"><div class="section-heading"><div><span class="eyebrow">PRACTICE HISTORY</span><h2>练习记录</h2></div></div><div id="practiceHistory" class="practice-history"></div></section>
         </div>
         <div id="paperWrongView" class="paper-mode-view"><div class="section-heading"><div><span class="eyebrow">WRONG ANSWERS</span><h2>错题本</h2><p class="muted">答错后次日复习；重练连续答对两次会自动掌握。</p></div><div class="wrong-toolbar"><select id="wrongFilter"><option value="due">今日到期</option><option value="learning">全部待掌握</option><option value="mastered">已掌握</option><option value="all">全部错题</option></select><select id="wrongReasonFilter"><option value="all">全部错因</option><option value="unknown">未标记</option><option value="vocabulary">词汇不熟</option><option value="grammar">语法不清</option><option value="careless">粗心误选</option><option value="time">时间不足</option></select><button class="secondary compact" id="practiceFilteredWrongButton">重练当前筛选</button></div></div><div id="wrongQuestionList" class="wrong-grid"></div></div>
